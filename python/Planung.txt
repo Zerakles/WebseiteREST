@@ -1,0 +1,13 @@
+
+Pi Funktionen:
+Temp zu Rest Api senden
+Rest Api abfragen
+Lüfter ansteuern
+
+Rest Api Funktionen:
+Temp speichern
+Temp abfragen
+
+SQLite Datenbankaufbau:
+1 Tabelle mit: id, timestamp, temp_c, GID
+
