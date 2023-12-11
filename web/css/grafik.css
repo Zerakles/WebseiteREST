@@ -1,0 +1,176 @@
+body{
+    background-color: #222;
+    font-family:  Arial;
+}
+.Container{
+margin: 0 auto;
+margin-top: 100px;
+height: 600px;
+width: 800px;
+box-shadow: 0px 0px 4px 1px rgba(255, 255, 255, 0.137);
+border-radius: 10px;
+display: flex;
+flex-direction: row;
+align-items: end;
+padding: 5px;
+position: relative;
+padding-left: 10px;
+text-align: center;
+transition-duration: 500ms;
+
+
+}
+
+.q{
+
+
+    width: 70px;
+
+    border-radius: 3px 3px 0 0 ;
+    margin-right: 10px;
+    position: relative;
+    transition-duration: 500ms;
+    transition-timing-function: ease;
+
+}
+
+.q:hover{
+    transform: scale(1.1);
+    letter-spacing: 1px;
+    filter: brightness(2);
+}
+
+.q1{
+
+    height: 70%;
+    width: 30px;
+    background-color: rgb(255, 67, 145);
+    border-radius: 70px 70px 0 0 ;
+    margin-right: 10px;
+}
+
+
+.temp{
+    width: 40px;
+    text-align: center;
+    color: white;
+    font-weight: bolder;
+    font-size: 14px;
+    position: absolute;
+    top: -20px;
+    left: calc(50% - 20px);
+}
+
+.tempD{
+    width: 34px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    position: absolute;
+    bottom: -30px;
+    left: calc(50% - 17px);
+
+
+}
+
+.T15{
+    height: 20px;
+
+    position: absolute;
+    right:  99.2%;
+    top: calc(85% - 10px);
+    font-size: larger;
+    font-weight: bolder;
+    color: rgb(0, 179, 255);
+   width: 45px;
+
+}
+
+
+
+.T30{
+    height: 20px;
+
+    position: absolute;
+    right:  99.2%;
+    top: calc(75% - 10px);
+    font-size: larger;
+    font-weight: bolder;
+    color: orange;
+   width: 45px;
+
+}
+
+.T60{
+    height: 20px;
+
+    position: absolute;
+    right:  99.2%;
+    top: calc(50% - 10px);
+    font-size: larger;
+    font-weight: bolder;
+    color: rgb(255, 77, 0);
+    width: 45px;
+}
+.T90{
+    height: 20px;
+
+    position: absolute;
+    right:  99.2%;
+    top: calc(25% - 10px);
+    font-size: larger;
+    font-weight: bolder;
+    color: rgb(255, 0, 0);
+    width: 45px;
+
+}
+
+.T120{
+    height: 20px;
+    font-size: larger;
+    font-weight: bolder;
+    position: absolute;
+    right:  99.2%;
+    top: -5px;
+    color: rgb(255, 28, 28);
+    width: 52px;
+
+}
+
+.seidbar{
+    height: 100px;
+    width: 100px;
+
+    position: absolute;
+    left: 78%;
+    top:100px;
+    text-align: center;
+    color: white;
+    word-spacing: 10px;
+
+}
+
+.babell{
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background-color: rgb(255, 28, 28);
+    display: inline-block;
+    transition-duration: 500ms;
+    transition-timing-function: ease;
+    position: absolute;
+    left: calc(97% - 20px);
+    filter: brightness(2);
+}
+
+.border{
+    box-shadow: 0 0 2px 1px rgba(255, 255, 255, 0.284);
+    height: 21px;
+    width: 60px;
+    display: inline-block;
+    padding:2px;
+    border-radius: 20px;
+    position: relative;
+    transition-duration: 2s;
+    transition-timing-function: ease;
+}
