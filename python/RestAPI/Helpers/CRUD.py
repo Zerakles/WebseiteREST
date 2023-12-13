@@ -1,10 +1,9 @@
+import random
 import sqlite3
-
-from pydantic import Field
+import string
 
 import polars as pl
-import random
-import string
+from pydantic import Field
 
 
 class RESTCRUD:
@@ -44,9 +43,12 @@ class RESTCRUD:
             err = sqlite3.Error
             return f'{err} \bTemperature could not be found'
 
-    def get_temps(self, HID: str, offset: int= 0, limit: int = 10):
+    def get_temps(self, HID: str, offset: int = 0, limit: int = None):
         try:
-            self.cursor.execute("SELECT * FROM temperatures WHERE HID = ? LIMIT ? OFFSET ?", (HID, limit, offset))
+            if limit is None:
+                self.cursor.execute("SELECT * FROM temperatures WHERE HID = ?", HID)
+            else:
+                self.cursor.execute("SELECT * FROM temperatures WHERE HID = ? LIMIT ? OFFSET ?", (HID, limit, offset))
             fetch = self.cursor.fetchall()
             data = []
             if fetch is None:

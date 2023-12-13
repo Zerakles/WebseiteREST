@@ -1,7 +1,7 @@
 from sqlite3 import Date
+from typing import Optional
 
 from pydantic import BaseModel
-from typing import Optional
 
 
 class TemperatureTable(BaseModel):

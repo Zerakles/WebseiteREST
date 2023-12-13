@@ -1,11 +1,8 @@
 import json
-from datetime import datetime
 
 import fastapi
 import uvicorn
 from WebseiteREST.python.SQLite.database import Database
-from WebseiteREST.python.RestAPI.Helpers.requestThread import APIRequest, RequestThread
-
 
 app = fastapi.FastAPI()
 db = Database()
