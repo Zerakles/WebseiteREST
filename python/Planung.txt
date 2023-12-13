@@ -5,9 +5,10 @@ Rest Api abfragen
 Lüfter ansteuern
 
 Rest Api Funktionen:
-Temp speichern
-Temp abfragen
+Temp speichern done
+Temp abfragen done
+requestQueue implementieren done
 
 SQLite Datenbankaufbau:
-1 Tabelle mit: id, timestamp, temp_c, GID
+1 Tabelle mit: id, timestamp, temp_c, GID done
 
