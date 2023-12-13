@@ -33,27 +33,27 @@ class PiRequests:
         return self.response
 
     def make_request(self):
-        PARAMS = self.params
-        type = self.type
+        request_parameter = self.params
+        request_type = self.type
         r = None
-        if type == 'get_temp':
-            r = requests.get(self.url, params=PARAMS)
-        elif type == 'get_temps':
-            r = requests.get(self.url, params=PARAMS)
-        elif type == 'insert_temp':
-            r = requests.post(self.url, params=PARAMS)
-        elif type == 'update_temp':
-            r = requests.put(self.url, params=PARAMS)
-        elif type == 'delete_temp':
-            r = requests.delete(self.url, params=PARAMS)
-        elif type == 'delete_temps':
-            r = requests.delete(self.url, params=PARAMS)
-        elif type == 'get_users':
-            r = requests.get(self.url, params=PARAMS)
-        elif type == 'insert_user':
-            r = requests.post(self.url, params=PARAMS)
-        elif type == 'get_HID':
-            r = requests.get(self.url, params=PARAMS)
-        elif type == 'delete_user':
-            r = requests.delete(self.url, params=PARAMS)
+        if request_type == 'get_temp':
+            r = requests.get(self.url, params=request_parameter)
+        elif request_type == 'get_temps':
+            r = requests.get(self.url, params=request_parameter)
+        elif request_type == 'insert_temp':
+            r = requests.post(self.url, params=request_parameter)
+        elif request_type == 'update_temp':
+            r = requests.put(self.url, params=request_parameter)
+        elif request_type == 'delete_temp':
+            r = requests.delete(self.url, params=request_parameter)
+        elif request_type == 'delete_temps':
+            r = requests.delete(self.url, params=request_parameter)
+        elif request_type == 'get_users':
+            r = requests.get(self.url, params=request_parameter)
+        elif request_type == 'insert_user':
+            r = requests.post(self.url, params=request_parameter)
+        elif request_type == 'get_HID':
+            r = requests.get(self.url, params=request_parameter)
+        elif request_type == 'delete_user':
+            r = requests.delete(self.url, params=request_parameter)
         return r
