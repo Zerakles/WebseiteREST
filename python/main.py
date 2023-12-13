@@ -2,6 +2,8 @@ import json
 
 import fastapi
 import uvicorn
+
+from WebseiteREST.python.RestAPI.Helpers.requestThread import APIRequest, RequestThread
 from WebseiteREST.python.SQLite.database import Database
 
 app = fastapi.FastAPI()
