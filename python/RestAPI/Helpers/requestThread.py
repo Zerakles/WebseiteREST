@@ -1,7 +1,7 @@
 import threading
-from datetime import datetime
-from WebseiteREST.python.SQLite.database import Database
 from typing import Union
+
+from WebseiteREST.python.SQLite.database import Database
 
 
 class APIRequest:
