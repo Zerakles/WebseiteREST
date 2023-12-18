@@ -12,48 +12,99 @@
 <body>
 
 
-<div>
-  <table  class="table">
-    <thead>
-    <tr>
+  <div id="Tabellen">
+  <div id="tabelle1">
+  <table class="table">
+      <thead>
+      <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Time</th>
+          <th scope="col">temp_c</th>
+          <th scope="col">temp_f</th>
+          <th scope="col">HID</th>
+      </tr>
+      </thead>
+      <tbody id="table-body">
+          <!-- Table rows will be dynamically added here -->
 
-      <th scope="col">ID</th>
-      <th scope="col">Time</th>
-      <th scope="col">Temp</th>
-      <th scope="col">GID</th>
-    </tr>
+          <tr>
+            <th scope="row">1</th>
+            <td>13:33</td>
+            <td>22</td>
+            <td>71.6</td>
+            <td>Temp_2</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>13:34</td>
+            <td>23</td>
+            <td>73.4</td>
+            <td>Temp_2</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>13:35</td>
+            <td>22</td>
+            <td>71.6</td>
+            <td>Temp_2</td>
+          </tr>
 
-    </thead>
-
-
-    <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>13:33</td>
-      <td>22</td>
-      <td>Temp_1</td>
-    </tr>
-
-    <tr>
-      <th scope="row">2</th>
-      <td>13:34</td>
-      <td>23</td>
-      <td>Temp_2</td>
-    </tr>
-
-    <tr>
-      <th scope="row">3</th>
-      <td>13:35</td>
-      <td>22</td>
-      <td>Temp_3</td>
-    </tr>
-
-    </tbody>
+          <!---->
+      </tbody>
   </table>
 </div>
 
 
+<div id="tabelle2">
+  <table class="table">
+      <thead>
+      <tr>
+          <th scope="col">ID</th>
+          <th scope="col">Time</th>
+          <th scope="col">temp_c</th>
+          <th scope="col">temp_f</th>
+          <th scope="col">HID</th>
+      </tr>
+      </thead>
+      <tbody id="table-body">
+          <!-- Table rows will be dynamically added here -->
+
+          <tr>
+            <th scope="row">1</th>
+            <td>13:33</td>
+            <td>22</td>
+            <td>71.6</td>
+            <td>Temp_2</td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>13:34</td>
+            <td>23</td>
+            <td>73.4</td>
+            <td>Temp_2</td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>13:35</td>
+            <td>22</td>
+            <td>71.6</td>
+            <td>Temp_2</td>
+          </tr>
+
+          <!---->
+      </tbody>
+  </table>
+</div>
+
+</div>
 </body>
 
 
 </html>
+
+<!-- 
+'id': fetch[0],
+'time': fetch[1],
+'temp_c': fetch[2],
+'temp_f': fetch[3],
+'HID': fetch[4] -->
