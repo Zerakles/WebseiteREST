@@ -1,6 +1,8 @@
 import RPi.GPIO as GPIO
 from time import sleep
 
+from WebseiteREST.python.Pi.Helpers.pi_requests_class import PiRequests
+
 # GPIO-Pins 
 enable_pin = 5
 input1_pin = 6
@@ -18,6 +20,14 @@ GPIO.setup(input2_pin, GPIO.OUT)
 
 # Motor aktivieren
 GPIO.output(enable_pin, GPIO.HIGH)
+
+# Userdata
+user_name = input('Bitte gib deinen Benutzernamen ein: ')
+user_password = input('Bitte gib dein Passwort ein: ')
+
+# REST-API-Endpunkt
+api_endpoint = input('Bitte gib die IP-Adresse des Servers ein: ')
+pi_request = PiRequests(api_endpoint, user_name, user_password, 'admin')
 
 def motor_vorwaerts():
     GPIO.output(input1_pin, GPIO.HIGH)
@@ -48,3 +58,8 @@ motor_stop()
 
 # GPIO zurücksetzen
 GPIO.cleanup()
+
+
+pi_request.make_request({'limit': None,'offset': None}, 'get_temps')
+response = pi_request.get_response()
+print(response)

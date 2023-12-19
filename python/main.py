@@ -19,7 +19,7 @@ def make_request(request: APIRequest):
         pass
     response = request.get_response()
     request.kill_request()
-    return json.dumps(response)
+    return json.dumps(response, ensure_ascii=False)
 
 @app.get('/')
 def hello_world():
@@ -39,7 +39,7 @@ def get_temps(HID: str,offset: int = None, limit: int = None):
 @app.post('/api/v1/temps')
 def create_temp(time: str, temp_c: float, temp_f: float, HID: str):
     #time = datetime.now().strftime("%Y-%m-%dT%HH:%M:%S")
-    request = APIRequest('http://localhost:8000/api/v1/temps', {'time': time, 'temp_c': temp_c, 'temp_f': temp_f, 'HID': HID}, 'insert_temp')
+    request = APIRequest('http://localhost:8000/api/v1/temps', {'time': time, 'temp_c': temp_c, 'temp_f': temp_f, 'HID': HID}, 'create_temp')
     return make_request(request)
 @app.put('/api/v1/temps/{temp_id}')
 def update_temp(temp_id: int, HID: str, temp_c: float = None, temp_f: float = None):
@@ -56,7 +56,10 @@ def delete_temps(temp_ids, HID: str):
     request = APIRequest('http://localhost:8000/api/v1/temps', {'temp_ids': temp_ids, 'HID': HID}, 'delete_temps')
     return make_request(request)
 
-
+@app.get('/api/v1/users/{username}_get')
+def get_user(username: str, password: str):
+    request = APIRequest('http://localhost:8000/api/v1/users', {'username': username, 'password': password}, 'get_user')
+    return make_request(request)
 @app.get('/api/v1/users')
 def get_users(username: str, password: str):
     request = APIRequest('http://localhost:8000/api/v1/users', {'username': username, 'password': password}, 'get_users')
@@ -64,7 +67,7 @@ def get_users(username: str, password: str):
 
 @app.post('/api/v1/users')
 def create_user(username: str, password: str, token: str):
-    requests = APIRequest('http://localhost:8000/api/v1/users', {'name': username, 'password': password, 'token': token}, 'insert_user')
+    requests = APIRequest('http://localhost:8000/api/v1/users', {'name': username, 'password': password, 'token': token}, 'create_user')
     return make_request(requests)
 
 @app.get('/api/v1/users/{username}')

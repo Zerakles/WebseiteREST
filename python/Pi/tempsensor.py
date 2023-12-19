@@ -5,20 +5,20 @@ from datetime import datetime
 import requests
 from Helpers.pi_requests_class import PiRequests
 
-
-
 # Adresse des DS18B20-Sensors im Dateisystem
 sensor_file = '/sys/bus/w1/devices/28-00000cb47b8d/w1_slave'
 
-# REST-API-Endpunkt
-api_endpoint = '172.20.199.182'
+# Userdata
+user_name = input('Bitte gib deinen Benutzernamen ein: ')
+user_password = input('Bitte gib dein Passwort ein: ')
 
+# REST-API-Endpunkt
+api_endpoint = input('Bitte gib die IP-Adresse des Servers ein: ')
+pi_request = PiRequests(api_endpoint, user_name, user_password, 'admin')
 # Pfad zur TXT-Datei für die Temperatur
 txt_file_path = 'temperatur.txt'
 
-# Userdata
-user_name = 'DEIN_USERNAME_HIER_EINFÜGEN'
-user_password = 'DEIN_PASSWORD_HIER_EINFÜGEN'
+
 
 def read_temperature():
     try:
@@ -44,12 +44,13 @@ def send_to_api(temperature):
     temp_f = float(temperature) * 9.0 / 5.0 + 32.0
     try:
         # Daten an das REST-API senden
-        user_data = PiRequests(f'http://${api_endpoint}:8000/api/v1/users', {'username': user_name, 'password': user_password}, 'get_users')
-        if user_data == 'User not found':
-            PiRequests(f'http://${api_endpoint}:8000/api/v1/users', {'name': user_name, 'password': user_password, 'token': 'admin'}, 'insert_user')
-            user_data = PiRequests(f'http://${api_endpoint}:8000/api/v1/users', {'username': user_name, 'password': user_password}, 'get_users')
-        timestamp = datetime.now().strftime("%Y-%m-%dT%HH:%M:%S")
-        response = PiRequests(f'http://${api_endpoint}:8000/api/v1/temps', {'time': timestamp, 'temp_c': temp_c, 'temp_f': temp_f, 'HID': user_data}, 'insert_temp')
+        temp_params = {
+            'time': datetime.now().strftime("%Y-%m-%dT%HH:%M:%S"),
+            'temp_c': temp_c,
+            'temp_f': temp_f,
+        }
+        pi_request.make_request(temp_params, 'create_temp')
+        response = pi_request.get_response()
         print(f"Erfolgreich an API gesendet. Antwort: {response}")
 
     except requests.exceptions.RequestException as api_err:

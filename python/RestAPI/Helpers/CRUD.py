@@ -66,7 +66,7 @@ class RESTCRUD:
             err = sqlite3.Error
             return f'{err} \bCould not get temperatures'
 
-    def insert_temp(self, data):
+    def create_temp(self, data):
         time, temp_c, temp_f, HID = data.values()
         try:
             self.cursor.execute("INSERT INTO temperatures (time, temp_c, temp_f, HID) VALUES (?, ?, ?, ?)",
@@ -75,7 +75,7 @@ class RESTCRUD:
             self.cursor.execute("SELECT id FROM temperatures WHERE HID = ?", (HID,))
             data = self.cursor.fetchall()
             if data is not None:
-                return f'Temperature {data[-1][0]} inserted'
+                return f'Temperature with id: {data[-1][0]} inserted'
         except sqlite3.Error:
             err = sqlite3.Error
             return f'{err} \bCould not insert temperature'
@@ -89,7 +89,7 @@ class RESTCRUD:
                 self.cursor.execute("UPDATE temperatures SET temp_c = ? WHERE id = ? AND HID = ?", (temp_c, temp_id, HID))
             except sqlite3.Error:
                 err = sqlite3.Error
-                return f'{err} \bTemperature {temp_id} not found'
+                return f'{err} \bTemperature with id: {temp_id} not found'
         if temp_f is not None:
             try:
                 self.cursor.execute("UPDATE temperatures SET temp_f = ? WHERE id = ? AND HID = ?", (temp_f, temp_id, HID))
@@ -97,7 +97,7 @@ class RESTCRUD:
                 err = sqlite3.Error
                 return f'{err} \bTemperature {temp_id} not found'
         self.conn.commit()
-        return f'Temperature {temp_id} updated'
+        return f'Temperature with id: {temp_id} updated'
 
     def delete_temp(self, temp_id: int, HID: str):
         try:
@@ -135,6 +135,26 @@ class RESTCRUD:
         HID = ''.join(random.choice(characters) for _ in range(9))
         return HID
 
+    def get_user(self, username: str, password: str):
+        try:
+            self.cursor.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
+            fetch = self.cursor.fetchone()
+            if fetch is None:
+                return 'User not found'
+            else:
+                data = {
+                    'username': fetch[0],
+                    'password': fetch[1],
+                    'HID': fetch[2],
+                    'token': fetch[3]
+                }
+                return data
+        except sqlite3.Error:
+            err = sqlite3.Error
+            return f'{err} \bUser could not be found'
+
+
+
     def get_users(self, username: str, password: str):
         if not self.isAdmin(username,password):
             return 'Permission denied'
@@ -154,7 +174,7 @@ class RESTCRUD:
             except sqlite3.Error:
                 err = sqlite3.Error
                 return f'{err} \bCould not get users'
-    def insert_user(self, data: dict):
+    def create_user(self, data: dict):
         username, password, token = data.values()
         self.cursor.execute("SELECT HID FROM users")
         HIDS = self.cursor.fetchall()

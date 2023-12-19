@@ -1,3 +1,4 @@
+import json
 import threading
 from typing import Union
 
@@ -53,18 +54,20 @@ class RequestThread(threading.Thread):
             r = self.db.crud.get_temp(PARAMS['id'], PARAMS['HID'])
         elif type == 'get_temps':
             r = self.db.crud.get_temps(PARAMS['HID'], PARAMS['offset'], PARAMS['limit'])
-        elif type == 'insert_temp':
-            r = self.db.crud.insert_temp(PARAMS)
+        elif type == 'create_temp':
+            r = self.db.crud.create_temp(PARAMS)
         elif type == 'update_temp':
             r = self.db.crud.update_temp(PARAMS['id'], PARAMS['HID'], PARAMS['temp_c'], PARAMS['temp_f'])
         elif type == 'delete_temp':
             r = self.db.crud.delete_temp(PARAMS['id'], PARAMS['HID'])
         elif type == 'delete_temps':
             r = self.db.crud.delete_temps(PARAMS['temp_ids'], PARAMS['HID'])
+        elif type == 'get_user':
+            r = self.db.crud.get_user(PARAMS['username'], PARAMS['password'])
         elif type == 'get_users':
             r = self.db.crud.get_users(PARAMS['username'], PARAMS['password'])
-        elif type == 'insert_user':
-            r = self.db.crud.insert_user(PARAMS)
+        elif type == 'create_user':
+            r = self.db.crud.create_user(PARAMS)
         elif type == 'get_HID':
             r = self.db.crud.get_HID(PARAMS['username'], PARAMS['password'])
         elif type == 'delete_user':
