@@ -11,7 +11,7 @@ from Helpers.pi_requests_class import PiRequests
 sensor_file = '/sys/bus/w1/devices/28-00000cb47b8d/w1_slave'
 
 # REST-API-Endpunkt
-api_endpoint = 'DEINE_API_ENDPOINT_URL_HIER_EINFÜGEN'
+api_endpoint = '172.20.199.182'
 
 # Pfad zur TXT-Datei für die Temperatur
 txt_file_path = 'temperatur.txt'
