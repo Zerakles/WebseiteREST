@@ -2,6 +2,7 @@ import json
 
 import fastapi
 import uvicorn
+import socket
 
 from WebseiteREST.python.RestAPI.Helpers.requestThread import APIRequest, RequestThread
 from WebseiteREST.python.SQLite.database import Database
@@ -9,6 +10,8 @@ from WebseiteREST.python.SQLite.database import Database
 app = fastapi.FastAPI()
 db = Database()
 
+hostname = socket.gethostname()
+ip_address = socket.gethostbyname(hostname)
 
 def make_request(request: APIRequest):
     db.add_to_queue(request)
@@ -29,7 +32,7 @@ def get_temp(temp_id: int, HID: str):
     return make_request(request)
 
 @app.get('/api/v1/temps')
-def get_temps(HID: str,offset: int, limit: int = 10):
+def get_temps(HID: str,offset: int = None, limit: int = None):
     request = APIRequest('http://localhost:8000/api/v1/temps', {'HID': HID, 'offset': offset, 'limit': limit}, 'get_temps')
     return make_request(request)
 
@@ -78,4 +81,4 @@ def delete_user(username: str, password: str):
 if __name__ == '__main__':
     thread = RequestThread(db)
     thread.start()
-    uvicorn.run(app, host='localhost', port=8000)
+    uvicorn.run(app, host=ip_address, port=8000)

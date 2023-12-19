@@ -45,8 +45,8 @@ class RESTCRUD:
 
     def get_temps(self, HID: str, offset: int = 0, limit: int = None):
         try:
-            if limit is None:
-                self.cursor.execute("SELECT * FROM temperatures WHERE HID = ?", HID)
+            if limit is None or offset is None:
+                self.cursor.execute("SELECT * FROM temperatures WHERE HID = ?", (HID,))
             else:
                 self.cursor.execute("SELECT * FROM temperatures WHERE HID = ? LIMIT ? OFFSET ?", (HID, limit, offset))
             fetch = self.cursor.fetchall()
