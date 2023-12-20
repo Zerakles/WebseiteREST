@@ -50,3 +50,43 @@ body {
   top: 20%;
   right: 20%;
 }
+
+/* /* */
+
+.seidbar{
+  height: 100px;
+  width: 100px;
+
+  position: absolute;
+  left: 78%;
+  top:100px;
+  text-align: center;
+  color: white;
+  word-spacing: 10px;
+
+}
+
+.babell{
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: rgb(255, 28, 28);
+  display: inline-block;
+  transition-duration: 500ms;
+  transition-timing-function: ease;
+  position: absolute;
+  left: calc(97% - 20px);
+  filter: brightness(2);
+}
+
+.border{
+  box-shadow: 0 0 2px 1px rgba(255, 255, 255, 0.284);
+  height: 21px;
+  width: 60px;
+  display: inline-block;
+  padding:2px;
+  border-radius: 20px;
+  position: relative;
+  transition-duration: 2s;
+  transition-timing-function: ease;
+}
