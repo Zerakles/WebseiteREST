@@ -3,7 +3,7 @@ import time
 
 import RPi.GPIO as GPIO
 
-from WebseiteREST.python.Pi.Helpers.pi_requests_class import PiRequests
+from Helpers.pi_requests_class import PiRequests
 
 
 # GPIO-Pins
