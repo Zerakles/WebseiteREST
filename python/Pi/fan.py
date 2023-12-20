@@ -67,10 +67,10 @@ def process_temps(temps):
             average_temp = None
     if average_temp is None:
         motor_stop()
-    elif average_temp >= 28 :
-            motor_vorwaerts()
+    elif average_temp >= 28:
+        motor_vorwaerts()
     elif average_temp < 28:
-            motor_stop()
+        motor_stop()
     print(f"Durchschnittstemperatur: {average_temp}")
 
 while True:
