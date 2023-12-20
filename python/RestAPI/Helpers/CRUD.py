@@ -2,7 +2,6 @@ import random
 import sqlite3
 import string
 
-import polars as pl
 from pydantic import Field
 
 
@@ -44,11 +43,13 @@ class RESTCRUD:
             return f'{err} \bTemperature could not be found'
 
     def get_temps(self, HID: str, offset: int = 0, limit: int = None):
+        if offset is None:
+            offset = 0
+        string = f'SELECT * FROM temperatures WHERE HID = "{HID}" ORDER BY id DESC'
+        if limit:
+            string += f' LIMIT {limit} OFFSET {offset}'
         try:
-            if limit is None or offset is None:
-                self.cursor.execute("SELECT * FROM temperatures WHERE HID = ?", (HID,))
-            else:
-                self.cursor.execute("SELECT * FROM temperatures WHERE HID = ? LIMIT ? OFFSET ?", (HID, limit, offset))
+            self.cursor.execute(string)
             fetch = self.cursor.fetchall()
             data = []
             if fetch is None:
@@ -210,7 +211,3 @@ class RESTCRUD:
                 err = sqlite3.Error
                 return f'{err} \bCould not delete user'
 
-
-    def polar_cache(self, dataFrame: pl.DataFrame):
-        self.df = dataFrame
-        return self.df
