@@ -1,3 +1,7 @@
+* {
+  margin: 0;
+  padding: 0;
+}
 
 body {
   font-family: 'Share Tech', sans-serif;
@@ -37,14 +41,14 @@ body {
 
 #tabelle1 {
   position: absolute;
-  top: 60%;
-  left: 35%;
+  top: 20%;
+  left: 20%;
 }
 
 #tabelle2 {
   position: absolute;
-  top: 10%;
-  left: 35%;
+  top: 20%;
+  right: 20%;
 }
 
 /* /* */
@@ -53,23 +57,12 @@ body {
   height: 100px;
   width: 100px;
 
-
+  position: absolute;
+  left: 78%;
+  top:100px;
   text-align: center;
   color: white;
   word-spacing: 10px;
-
-}
-
-#seidbar1{
-  position: absolute;
-  right: 30%;
-  top:100px;
-
-}
-#seidbar2{
-  position: absolute;
-  right: 30%;
-  top:60%;
 
 }
 
