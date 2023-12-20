@@ -148,7 +148,7 @@ transition-duration: 500ms;
 
     position: absolute;
     left: 78%;
-    top:170px;
+    top:175px;
     text-align: center;
     color: white;
     word-spacing: 10px;
@@ -174,7 +174,7 @@ transition-duration: 500ms;
 
     position: absolute;
     left: 78%;
-    top:115%;
+    top:120%;
     text-align: center;
     color: white;
     word-spacing: 10px;
@@ -222,7 +222,7 @@ transition-duration: 500ms;
     color: white;
     width: 100px;
     left: calc(50% - 50px);
-    top: 2%;
+    top: 9%;
     
 
 }
@@ -232,7 +232,7 @@ transition-duration: 500ms;
     width: 100px;
     margin: 0 auto;
     left: calc(50% - 50px);
-    top: 96%;
+    top: 109%;
     
 
 }
