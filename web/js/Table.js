@@ -1,4 +1,4 @@
-/*
+
 document.addEventListener('DOMContentLoaded', function () {
     //const apiUrl = 'API_URL'; // Ersetze dies durch die tatsächliche API-URL
     const apiUrl = '';
@@ -35,9 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initialisiere die Tabelle beim Laden der Seite
     fetchAndPopulateTable();
 });
-
-*/
-  
 
 
 
