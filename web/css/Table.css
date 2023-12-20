@@ -11,13 +11,13 @@ body {
     linear-gradient(to right top, #343a40, #2b2c31, #211f22, #151314, #000000);
 }
 
-.table {
+/* .table {
   font-family: Arial, sans-serif;
   border-collapse: collapse;
-  width: 60%; /* Ändere die Breite auf 60% oder einen anderen Wert nach Bedarf */
+  width: 60%; 
   margin: 20px 0;
   color: #fff;
-}
+} */
 
 .table th,
 .table td {
@@ -41,29 +41,53 @@ body {
 
 #tabelle1 {
   position: absolute;
-  top: 20%;
-  left: 20%;
+  top: 8%;
+  left: 35%;
+
+
+  font-family: Arial, sans-serif;
+  border-collapse: collapse;
+  width: 60%; /* Ändere die Breite auf 60% oder einen anderen Wert nach Bedarf */
+  margin: 20px 0;
+  color: #fff;
 }
 
 #tabelle2 {
   position: absolute;
-  top: 20%;
-  right: 20%;
+  top: 55%;
+  left: 35%;
+
+  font-family: Arial, sans-serif;
+  border-collapse: collapse;
+  width: 60%; /* Ändere die Breite auf 60% oder einen anderen Wert nach Bedarf */
+  margin: 20px 0;
+  color: #fff;
 }
 
-/* /* */
+
 
 .seidbar{
   height: 100px;
   width: 100px;
 
-  position: absolute;
-  left: 78%;
-  top:100px;
   text-align: center;
   color: white;
   word-spacing: 10px;
 
+}
+
+#seidbar1{
+  position: absolute;
+  left: 65%;
+  top:8%;
+
+}
+
+#seidbar2{
+
+  position: absolute;
+  left: 65%;
+  top:55%;
 }
 
 .babell{
