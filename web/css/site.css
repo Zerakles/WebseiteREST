@@ -26,5 +26,5 @@ nav li{
 
 .active{
     font-style: italic;
-    color: blue;
+    color: rgb(0, 179, 255);
 }
