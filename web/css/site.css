@@ -6,6 +6,10 @@ nav{
     border-radius: 0 0 25px 25px;
 }
 
+body{
+    background-repeat: repeat;
+}
+
 .nav{
     background: none;
     color: white;
