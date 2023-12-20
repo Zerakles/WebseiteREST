@@ -1,13 +1,9 @@
 nav{
     background: black;
     width: 600px;
-    margin: -8px auto auto auto;
+    margin: -10px auto;
     height: 60px;
     border-radius: 0 0 25px 25px;
-}
-
-body{
-    background-repeat: repeat;
 }
 
 .nav{
@@ -30,5 +26,5 @@ nav li{
 
 .active{
     font-style: italic;
-    color: rgb(0, 179, 255);
+    color: blue;
 }

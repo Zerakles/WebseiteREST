@@ -1,8 +1,5 @@
-body{
-    background-color: #222;
-    font-family:  Arial;
-}
-.Container{
+
+.Container, .Container2{
 margin: 0 auto;
 margin-top: 100px;
 height: 600px;
@@ -19,6 +16,9 @@ text-align: center;
 transition-duration: 500ms;
 
 
+}
+.Container{
+    margin-bottom: 200px; 
 }
 
 .q{
@@ -143,7 +143,7 @@ transition-duration: 500ms;
 
     position: absolute;
     left: 78%;
-    top:100px;
+    top:175px;
     text-align: center;
     color: white;
     word-spacing: 10px;
@@ -163,6 +163,43 @@ transition-duration: 500ms;
     filter: brightness(2);
 }
 
+.seidbar2{
+    height: 100px;
+    width: 100px;
+
+    position: absolute;
+    left: 78%;
+    top:1000px;
+    text-align: center;
+    color: white;
+    word-spacing: 10px;
+
+}
+
+.babell2{
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background-color: rgb(255, 28, 28);
+    display: inline-block;
+    transition-duration: 500ms;
+    transition-timing-function: ease;
+    position: absolute;
+    left: calc(97% - 20px);
+    filter: brightness(2);
+}
+.border2{
+    box-shadow: 0 0 2px 1px rgba(255, 255, 255, 0.284);
+    height: 21px;
+    width: 60px;
+    display: inline-block;
+    padding:2px;
+    border-radius: 20px;
+    position: relative;
+    transition-duration: 2s;
+    transition-timing-function: ease;
+}
+
 .border{
     box-shadow: 0 0 2px 1px rgba(255, 255, 255, 0.284);
     height: 21px;
@@ -174,3 +211,24 @@ transition-duration: 500ms;
     transition-duration: 2s;
     transition-timing-function: ease;
 }
+
+.ueberschrift1{
+    position: absolute;
+    color: white;
+    width: 100px;
+    left: calc(50% - 50px);
+    top: 9%;
+    
+
+}
+.ueberschrift2{
+    position: absolute;
+    color: white;
+    width: 100px;
+    margin: 0 auto;
+    left: calc(50% - 50px);
+    top: 900px;
+    
+
+}
+
