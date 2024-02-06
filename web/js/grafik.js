@@ -151,7 +151,7 @@ function addT(){
          tempD.push(db1[0].time.substring(11))
      
          
-         q_einfügen(1)
+         q_einfügen(0)
    
     },  200);
 }
