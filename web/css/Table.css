@@ -34,6 +34,7 @@ body {
   background-color: #777;
 }
 
+<<<<<<< HEAD
 #tabelle1 {
   position: absolute;
   top: 8%;
@@ -46,6 +47,8 @@ body {
   margin: 20px 0;
   color: #fff;
 }
+=======
+>>>>>>> c46c511060f4d2c7d250aa36f14491f398f00002
 
 #tabelle2 {
   position: absolute;
@@ -55,34 +58,33 @@ body {
   font-family: Arial, sans-serif;
   border-collapse: collapse;
   width: 60%; /* Ändere die Breite auf 60% oder einen anderen Wert nach Bedarf */
-  margin: 20px 0;
+  margin: auto;
+  max-width: 1000px;
+  min-width: 800px;
   color: #fff;
-}
-
-
-
-.seidbar{
-  height: 100px;
-  width: 100px;
-
-  text-align: center;
-  color: white;
-  word-spacing: 10px;
-
-}
-
-#seidbar1{
-  position: absolute;
-  left: 86%;
-  top:8%;
-
 }
 
 #seidbar2{
 
   position: absolute;
-  left: 86%;
+  left: 78%;
   top:55%;
+}
+
+
+
+
+#tabelle1 {
+  position: absolute;
+  top: 8%;
+  left: 35%;
+  font-family: Arial, sans-serif;
+  border-collapse: collapse;
+  width: 60%;
+  margin: auto;
+  color: #fff;
+  max-width: 1000px;
+  min-width: 800px;
 }
 
 .babell{
@@ -110,18 +112,6 @@ body {
   transition-timing-function: ease;
 }
 
-.seidbar{
-  height: 100px;
-  width: 100px;
-
-  position: absolute;
-  left: 78%;
-  top:100px;
-  text-align: center;
-  color: white;
-  word-spacing: 10px;
-
-}
 
 .babell{
   height: 20px;

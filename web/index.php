@@ -19,11 +19,7 @@
     <script src="./js/nav.js"></script>
     <title>REST Statistiken</title>
     <?php
-    if ($_SESSION['site'] == "t") {
-        echo '<link rel="stylesheet" href="./css/site2.css">';
-    } else {
         echo '<link rel="stylesheet" href="./css/site.css">';
-    }
     ?>
 </head>
 <header>

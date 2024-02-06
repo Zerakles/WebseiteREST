@@ -1,9 +1,12 @@
+import json
+import time
+
 import RPi.GPIO as GPIO
-from time import sleep
 
-from WebseiteREST.python.Pi.Helpers.pi_requests_class import PiRequests
+from Helpers.pi_requests_class import PiRequests
 
-# GPIO-Pins 
+
+# GPIO-Pins
 enable_pin = 5
 input1_pin = 6
 input2_pin = 25
@@ -29,6 +32,7 @@ user_password = input('Bitte gib dein Passwort ein: ')
 api_endpoint = input('Bitte gib die IP-Adresse des Servers ein: ')
 pi_request = PiRequests(api_endpoint, user_name, user_password, 'admin')
 
+
 def motor_vorwaerts():
     GPIO.output(input1_pin, GPIO.HIGH)
     GPIO.output(input2_pin, GPIO.LOW)
@@ -41,25 +45,42 @@ def motor_stop():
     GPIO.output(input1_pin, GPIO.LOW)
     GPIO.output(input2_pin, GPIO.LOW)
 
-# Motor vorwärts für 2 Sekunden
-motor_vorwaerts()
-sleep(2)
 
-# Motor stoppen für 1 Sekunde
-motor_stop()
-sleep(1)
+def get_temps():
+    pi_request.make_request({'limit': 5,'offset': None}, 'get_temps')
+    response = pi_request.get_response()
+    return json.loads(response)
 
-# Motor rückwärts für 2 Sekunden
-motor_rueckwaerts()
-sleep(2)
 
-# Motor stoppen
-motor_stop()
+def process_temps(temps):
+    average_temp = None
+    if temps is None:
+        motor_stop()
+    else:
+        average_temp = 0
+        try:
+            for temp in temps:
+                average_temp += temp['temp_c']
+            average_temp = average_temp / len(temps)
+        except Exception as e:
+            print(f"Fehler beim Berechnen der Durchschnittstemperatur: {e}")
+            average_temp = None
+    if average_temp is None:
+        motor_stop()
+    elif average_temp >= 28:
+        motor_vorwaerts()
+    elif average_temp < 28:
+        motor_stop()
+    print(f"Durchschnittstemperatur: {average_temp}")
+
+while True:
+    # Temperatur auslesen
+    temps = get_temps()
+    print(temps)
+    process_temps(temps)
+    # Wartezeit zwischen den Messungen
+    time.sleep(1)
+
 
 # GPIO zurücksetzen
 GPIO.cleanup()
-
-
-pi_request.make_request({'limit': None,'offset': None}, 'get_temps')
-response = pi_request.get_response()
-print(response)
