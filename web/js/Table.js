@@ -1,50 +1,48 @@
-/*
-document.addEventListener('DOMContentLoaded', function () {
-    //const apiUrl = 'API_URL'; // Ersetze dies durch die tatsächliche API-URL
-    const apiUrl = '';
 
-    function fetchAndPopulateTable() {
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => updateTable(data))
-            .catch(error => console.error('Error fetching data:', error));
+
+async function fetchData() {
+    
+    try {
+      const response = await fetch("http://172.20.199.182:8000/api/v1/temps?HID=Client_3PNikenZs&limit=5");
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+  
+  
+      const data = await response.json();
+      // Hier kannst du mit den geladenen Daten arbeiten
+      var db1 = data;
+ 
+      db1 = JSON.parse(db1);
+     //  console.log(db1);
+      console.log(db1[0].id);
+ 
+    } catch (error) {
+      console.error('Fetch error:', error);
     }
-
-    function updateTable(data) {
-        const tableBody1 = document.getElementById('table-body1');
-        const tableBody2 = document.getElementById('table-body2');
-
-        tableBody1.innerHTML = ''; // Leert den aktuellen Inhalt der Tabelle
-
-        // Begrenze die Anzahl der Einträge auf maximal 10
-        data.slice(0, 5).forEach(fetch => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <th scope="row">${fetch[0]}</th>
-                <td>${fetch[1]}</td>
-                <td>${fetch[2]}</td>
-                <td>${fetch[3]}</td>
-                <td>${fetch[4]}</td>
-            `;
-            tableBody1.appendChild(row);
-        });
-
-    }
-
-    // Aktualisiere die Tabelle alle 5 Sekunden (5000 Millisekunden)
-    setInterval(fetchAndPopulateTable, 5000);
-
-    // Initialisiere die Tabelle beim Laden der Seite
-    fetchAndPopulateTable();
-});
-*/
+  }
+  
+ 
+  fetchData();
+  
+  
+  
+  
+  
+  
+  setTimeout(function () {
+     
+    
+  }, 200);
+ 
 
 
-
-
-
-
-//////////////////
+/////////////////////////////
+///////////////////////////////
+//////////
+//
 
 var dataArr = [1, 2, 3, 4, 5];
 
@@ -68,11 +66,6 @@ function updateTable() {
     console.log("Funktion start");
     const tableBody1 = document.getElementById('table-body1');
     const tableBody2 = document.getElementById('table-body2');
-    const row1 = document.createElement('tr');
-    
-
-    //row1.innerHTML = '';
-    //tableBody1 = '';
 
 
     tableBody1.innerHTML = '';
@@ -113,11 +106,8 @@ function updateTable() {
 
 
 
-    //tableBody1.appendChild(row1);
-
 }
 //////////////////////////////////////////////////////
-
 
 
 

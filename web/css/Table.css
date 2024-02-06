@@ -37,7 +37,7 @@ body {
 #tabelle1 {
   position: absolute;
   top: 8%;
-  left: 35%;
+  left: 30%;
 
 
   font-family: Arial, sans-serif;
@@ -50,7 +50,7 @@ body {
 #tabelle2 {
   position: absolute;
   top: 55%;
-  left: 35%;
+  left: 30%;
 
   font-family: Arial, sans-serif;
   border-collapse: collapse;
