@@ -1,152 +1,61 @@
+var db1 = [];
 
-
-async function fetchData() {
-    
+async function fetchData(pi) {
     try {
-      const response = await fetch("http://172.20.199.182:8000/api/v1/temps?HID=Client_3PNikenZs&limit=5");
-  
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-  
-  
-  
-      const data = await response.json();
-      // Hier kannst du mit den geladenen Daten arbeiten
-      var db1 = data;
- 
-      db1 = JSON.parse(db1);
-     //  console.log(db1);
-      console.log(db1[0].id);
- 
+        let response;
+        if (pi === 1) {
+            response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_TJlE8hDC7&limit=5");
+        }
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.json();
+        db1 = data;
+        updateTable(db1, 1); // Update the first table data
+
     } catch (error) {
-      console.error('Fetch error:', error);
+        console.error('Fetch error:', error);
     }
-  }
-  
- 
-  fetchData();
-  
-  
-  
-  
-  
-  
-  setTimeout(function () {
-     
-    
-  }, 200);
- 
-
-
-/////////////////////////////
-///////////////////////////////
-//////////
-//
-
-var dataArr = [1, 2, 3, 4, 5];
-
-
-function arrbefuellen(){
-    
-    dataArr.push(Math.floor(Math.random() * (45 - 10 + 1)) + 10);
-
-    console.log("länge" + dataArr.length);
-    updateTable();
 }
 
-setInterval(arrbefuellen, 1000);
+fetchData(1);
 
+setInterval(fetchData, 2000, 1); // Fetch data from Pi1 every 2 seconds
 
-
-var data;
-
-function updateTable() {
-    
-    console.log("Funktion start");
-    const tableBody1 = document.getElementById('table-body1');
-    const tableBody2 = document.getElementById('table-body2');
-
-
-    tableBody1.innerHTML = '';
-
-    if(dataArr.length > 5){
-
-        
-        for(var x = dataArr.length - 1; x > dataArr.length - 6 ; x--){
-
-            tableBody1.innerHTML += `
-            <th scope="row">test</th>
-            <td>test</td>
-            <td>${dataArr[x]}</td>
-            <td>test</td>
-            <td>test</td>
-        `;
-
+function updateTable(data, pi) {
+    console.log("Function start for Pi" + pi);
+    const tableBody = document.getElementById('table-body' + pi);
+    tableBody.innerHTML = '';
+    if (data.length > 0) {
+        for (var i = 0; i < Math.min(5, data.length); i++) {
+            tableBody.innerHTML += `
+                <tr>
+                    <th scope="row">${data[i].id}</th>
+                    <td>${data[i].time}</td>
+                    <td>${Math.round(data[i].temp_c)}</td>
+                    <td>${Math.round(data[i].temp_f)}</td>
+                    <td>Pi${pi}</td>
+                </tr>
+            `;
         }
-        
-    }else{
-
-        for(var i = 0; i < 5; i++){
-
-            tableBody1.innerHTML += `
-            <th scope="row">test</th>
-            <td>test</td>
-            <td>${dataArr[i]}</td>
-            <td>test</td>
-            <td>test</td>
-        `;
-
-        }
-
-
     }
-
-
-
-
-
-}
-//////////////////////////////////////////////////////
-
-
-
-
-
-var babell = document.getElementsByClassName("babell");
-
-function fanAnAus(t) {
-  if (t > 30) {
-    babell[0].style.backgroundColor = "green";
-    babell[0].style.left = "3%";
-    babell[1].style.backgroundColor = "green";
-    babell[1].style.left = "3%";
-  } else {
-    babell[0].style.backgroundColor = "rgb(255, 28, 28)";
-    babell[0].style.left = "calc(97% - 20px)";
-    babell[1].style.backgroundColor = "rgb(255, 28, 28)";
-    babell[1].style.left = "calc(97% - 20px)";
-  }
-
-  if (t > 30) {
-    babell[1].style.backgroundColor = "green";
-    babell[1].style.left = "3%";
-  } else {
-    babell[1].style.backgroundColor = "rgb(255, 28, 28)";
-    babell[1].style.left = "calc(97% - 20px)";
-  }
 }
 
-
-
-var park;
-
-function addT() {
-  park = Math.floor(Math.random() * (45 - 10 + 1)) + 10;
-  fanAnAus(park);
-  console.log(park);
+function fanAnAus(t, pi) {
+    const babell = document.getElementsByClassName("babell")[pi - 1];
+    if (t > 30) {
+        babell.style.backgroundColor = "green";
+        babell.style.left = "3%";
+    } else {
+        babell.style.backgroundColor = "rgb(255, 28, 28)";
+        babell.style.left = "calc(97% - 20px)";
+    }
 }
 
-
-
-setInterval(addT, 1000);
+function addT(pi) {
+    if (db1.length > 0) {
+        fanAnAus(db1[0].temp_c, pi);
+    }
+}
