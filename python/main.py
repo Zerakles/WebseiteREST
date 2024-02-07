@@ -3,9 +3,11 @@ import json
 import fastapi
 import uvicorn
 import socket
+from fastapi import Response
 
-from WebseiteREST.python.RestAPI.Helpers.requestThread import APIRequest, RequestThread
-from WebseiteREST.python.SQLite.database import Database
+
+from RestAPI.Helpers.requestThread import APIRequest, RequestThread
+from SQLite.database import Database
 from fastapi.middleware.cors import CORSMiddleware
 
 app = fastapi.FastAPI()
@@ -26,8 +28,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-hostname = socket.gethostname()
-ip_address = socket.gethostbyname(hostname)
+ip_address = '172.20.199.251'
 
 def make_request(request: APIRequest):
     db.add_to_queue(request)
@@ -35,7 +36,7 @@ def make_request(request: APIRequest):
         pass
     response = request.get_response()
     request.kill_request()
-    return json.dumps(response, ensure_ascii=False)
+    return Response(content=json.dumps(response, ensure_ascii=False), media_type="application/json")
 
 @app.get('/')
 def hello_world():

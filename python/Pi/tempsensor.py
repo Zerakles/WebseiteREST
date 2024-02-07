@@ -6,7 +6,7 @@ import requests
 from Helpers.pi_requests_class import PiRequests
 
 # Adresse des DS18B20-Sensors im Dateisystem
-sensor_file = '/sys/bus/w1/devices/28-00000cb47b8d/w1_slave'
+sensor_file = '/sys/bus/w1/devices/28-940feb086461/w1_slave'
 
 # Userdata
 user_name = input('Bitte gib deinen Benutzernamen ein: ')
@@ -50,8 +50,6 @@ def send_to_api(temperature):
             'temp_f': temp_f,
         }
         pi_request.make_request(temp_params, 'create_temp')
-        response = pi_request.get_response()
-        print(f"Erfolgreich an API gesendet. Antwort: {response}")
 
     except requests.exceptions.RequestException as api_err:
         print(f"Fehler beim Senden an API: {api_err}")
@@ -75,5 +73,5 @@ while True:
         update_txt_file(temperature)
 
     # Wartezeit zwischen den Messungen
-    time.sleep(1)
+    # time.sleep(1)
 

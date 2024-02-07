@@ -1,10 +1,8 @@
-import json
 
 import requests
 
 
 class PiRequests:
-    response = None
     auth = None
 
     def __init__(self, host, username , password, token):
@@ -13,7 +11,7 @@ class PiRequests:
         if str(self.response).replace('"', '') == 'User not found':
             self.make_request({'username': username, 'password': password, 'token': token}, 'create_user')
             self.make_request({'username': username, 'password': password}, 'get_user')
-        self.auth = json.loads(self.response)
+        self.auth = self.response['HID']
 
     def get_host(self):
         return self.host
@@ -22,7 +20,7 @@ class PiRequests:
         self.host = host
 
     def set_response(self, response):
-        self.response = response
+        self.response = response.json()
 
     def get_response(self):
         return self.response
@@ -38,12 +36,12 @@ class PiRequests:
         if request_type == 'get_temp':
             temp_params = {
                 'temp_id': request_parameter['temp_id'],
-                'HID': self.auth['HID']
+                'HID': self.auth
             }
             r = requests.get(f'http://{self.host}:8000/api/v1/temps/{temp_params["temp_id"]}?temp_id={temp_params["temp_id"]}&HID={temp_params["HID"]}')
         elif request_type == 'get_temps':
             temp_params = {
-                'HID': self.auth['HID'],
+                'HID': self.auth,
                 'limit': request_parameter['limit'] if 'limit' in request_parameter else None,
                 'offset': request_parameter['offset'] if 'offset' in request_parameter else None
             }
@@ -59,13 +57,13 @@ class PiRequests:
                 'time': request_parameter['time'],
                 'temp_c': request_parameter['temp_c'],
                 'temp_f': request_parameter['temp_f'],
-                'HID': self.auth['HID']
+                'HID': self.auth
             }
             r = requests.post(f'http://{self.host}:8000/api/v1/temps', params=temp_params)
         elif request_type == 'update_temp':
             temp_params = {
                 'temp_id': request_parameter['temp_id'],
-                'HID': self.auth['HID'],
+                'HID': self.auth,
                 'temp_c': request_parameter['temp_c'],
                 'temp_f': request_parameter['temp_f']
             }
@@ -73,13 +71,13 @@ class PiRequests:
         elif request_type == 'delete_temp':
             temp_params = {
                 'temp_id': request_parameter['temp_id'],
-                'HID': self.auth['HID']
+                'HID': self.auth
             }
             r = requests.delete(f'http://{self.host}:8000/api/v1/temps', params=temp_params)
         elif request_type == 'delete_temps':
             temp_params = {
                 'temp_ids': request_parameter['temp_ids'],
-                'HID': self.auth['HID']
+                'HID': self.auth
             }
             r = requests.delete(f'http://{self.host}:8000/api/v1/temps', params=temp_params)
         elif request_type == 'get_user':
@@ -116,4 +114,4 @@ class PiRequests:
             r = requests.get(
                 f'http://{self.host}:8000/api/v1/users/{user_request_parameter["username"]}?username={user_request_parameter["username"]}&password={user_request_parameter["password"]}',
                 params=user_request_parameter)
-        self.set_response(r.json())
+        self.set_response(r)

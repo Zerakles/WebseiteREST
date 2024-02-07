@@ -1,11 +1,11 @@
-from WebseiteREST.python.RestAPI.Helpers.CRUD import RESTCRUD
+from RestAPI.Helpers.CRUD import RESTCRUD
 
 
 class Database(RESTCRUD):
     crud = RESTCRUD()
     request_queue = []
 
-    def __init__(self):#
+    def __init__(self):
         self.crud.connect_to_db()
         self.crud.cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
         if self.crud.cursor.fetchone() is None:

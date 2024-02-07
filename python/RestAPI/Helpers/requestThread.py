@@ -2,7 +2,7 @@ import json
 import threading
 from typing import Union
 
-from WebseiteREST.python.SQLite.database import Database
+from SQLite.database import Database
 
 
 class APIRequest:

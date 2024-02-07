@@ -19,8 +19,7 @@ class RESTCRUD:
         self.cursor = None
 
     def connect_to_db(self):
-        self.db = 'SQLite/DB/PiRest.db'
-        self.conn = sqlite3.connect(self.db)
+        self.conn = sqlite3.connect('SQLite/DB/PiRest.db')
         self.cursor = self.conn.cursor()
 
     def get_temp(self, temp_id: int, HID: str):

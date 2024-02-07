@@ -1,4 +1,3 @@
-import json
 import time
 
 import RPi.GPIO as GPIO
@@ -49,7 +48,7 @@ def motor_stop():
 def get_temps():
     pi_request.make_request({'limit': 5,'offset': None}, 'get_temps')
     response = pi_request.get_response()
-    return json.loads(response)
+    return response
 
 
 def process_temps(temps):
@@ -79,7 +78,7 @@ while True:
     print(temps)
     process_temps(temps)
     # Wartezeit zwischen den Messungen
-    time.sleep(1)
+    time.sleep(5)
 
 
 # GPIO zurücksetzen
