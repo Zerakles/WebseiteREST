@@ -12,7 +12,7 @@ async function fetchData(p) {
         if(p === 1){
             response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_TJlE8hDC7&limit=1");
         }else{
-            //response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_TJlE8hDC7&limit=1");
+            response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_TJlE8hDC7&limit=5");
         }
 
 
@@ -33,7 +33,7 @@ async function fetchData(p) {
 
 // Aufruf der Funktion
 fetchData(1);
-fetchData(2);
+
 
 
 
@@ -101,7 +101,7 @@ function tempgrad(t){
 
 
 q_einfügen(0)
-q_einfügen(1)
+
 var park;
 var parkt;
 function addT(){
@@ -111,7 +111,6 @@ function addT(){
         park = Math.round(db1[0].temp_c);
         parkt = db1[0].time;
 
-        fanAnAus(park,1);
         temp.push(park);
         tempD.push(db1[0].time.substring(11))
 
@@ -121,8 +120,22 @@ function addT(){
     },  3000);
 }
 
+function addT2(){
 
-var setaddT = setInterval(addT, 1000);
+    fetchData(2)
+    setTimeout(function () {
+        for(var x =0; x < db1.length; x++){
+            park2[x] = +db1[x].temp_c
+        }
+
+        fanAnAus(park2,1);
+
+    },  2000);
+}
+
+
+var setaddT = setInterval(addT, 3000);
+var setaddT = setInterval(addT2, 3000);
 
 
 function anundaus(){
@@ -142,7 +155,7 @@ var babell = document.getElementsByClassName("babell");
 
 function fanAnAus(t,f){
     if(f == 1){
-        if(t > 30){
+        if(checkAvgTemp(t)){
             babell[0].style.backgroundColor = "green"
             babell[0].style.left = "3%";
 
@@ -155,7 +168,7 @@ function fanAnAus(t,f){
 
 }
 
-var testa = [28,30,30,30,32]
+
 
 
 function checkAvgTemp(t){
@@ -163,13 +176,10 @@ function checkAvgTemp(t){
     for(var i =0 ; i < t.length; i++ ){
         sum += t[i];
     }
-    if (sum / 5 >= 30){
+    if (sum / 5 > 28){
         return true;
     }else{
         return false;
     }
 }
-
-console.log(checkAvgTemp(testa));
-
 
