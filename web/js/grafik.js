@@ -11,8 +11,6 @@ async function fetchData(p) {
 
         if(p === 1){
             response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_TJlE8hDC7&limit=1");
-        }else{
-            response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_TJlE8hDC7&limit=5");
         }
 
 
