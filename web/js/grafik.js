@@ -4,15 +4,15 @@ var temp2 = [20,25,30,40,60,10,90,20,30,40,50,10,90,20,40,50,10,90,20,120,20,40,
 var tempD2 = ["09:01","09:02","09:03","09:04","09:05","09:06","09:07","09:08","09:09","09:10","09:11","09:12","09:13","09:14","09:15","09:16","09:18","09:19","09:20","09:21","09:01","09:02","09:03","09:04","09:05","09:06","09:07"];
 
 var db1;
-var db2;
-var db3;
 
 async function fetchData(p) {
+   let response;
    try {
+
       if(p === 1){
-         const response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_3PNikenZs&limit=1");
+          response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_3PNikenZs&limit=1");
       }else{
-         const response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_43PVPt8SW&limit=1");
+          response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_43PVPt8SW&limit=1");
       }
      
  
@@ -153,7 +153,7 @@ function addT(){
          tempD.push(db1[0].time.substring(11))
      
          
-         q_einfügen(0)
+         q_einfügen(1)
    
     },  200);
 }
@@ -229,7 +229,7 @@ function checkAvgTemp(t){
    for(var i =0 ; i < t.length; i++ ){
       sum += t[i];
    }
-   if (sum / 5 > 28){
+   if (sum / 5 >= 30){
       return true;
    }else{
       return false;
