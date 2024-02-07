@@ -4,7 +4,7 @@ var temp2 = [20,25,30,40,60,10,90,20,30,40,50,10,90,20,40,50,10,90,20,120,20,40,
 var tempD2 = ["09:01","09:02","09:03","09:04","09:05","09:06","09:07","09:08","09:09","09:10","09:11","09:12","09:13","09:14","09:15","09:16","09:18","09:19","09:20","09:21","09:01","09:02","09:03","09:04","09:05","09:06","09:07"];
 
 var db1;
-
+let response;
 async function fetchData(p) {
     let response;
     try {
@@ -12,7 +12,7 @@ async function fetchData(p) {
         if(p === 1){
             response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_TJlE8hDC7&limit=1");
         }else{
-            response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_TJlE8hDC7&limit=1");
+            //response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_TJlE8hDC7&limit=1");
         }
 
 
@@ -118,7 +118,7 @@ function addT(){
 
         q_einfügen(0)
 
-    },  2000);
+    },  3000);
 }
 
 
