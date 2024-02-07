@@ -6,7 +6,7 @@ async function fetchData(p) {
    try {
        let response;
       if(p === 1){
-         response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_3PNikenZs&limit=1");
+         response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_lVfU0rVUo&limit=1");
       }else{
          response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_43PVPt8SW&limit=1");
       }
