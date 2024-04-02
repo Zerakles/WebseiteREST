@@ -103,6 +103,15 @@ def get_endpoint():
     if 'mmbbs' in hostname:
         hostname = 'mmbbs.local'
     ip_address = socket.gethostbyname(hostname)
+    if ip_address == '127.0.0.1':
+        ip_address = input('Bitte gib die Adresse des Servers ein:')
+        with open('cache/save_data.json', 'w') as file:
+            data = {
+                'user': save_data['user'],
+                'hostname': f'{ip_address}'
+            }
+            json.dump(data, file)
+            return f'{ip_address}'
     ip_address = '.'.join(ip_address.split('.')[:3])
     if save_data and save_data['hostname'] != '0.0.0.0':
         ip_check = '.'.join(str(save_data['hostname']).split('.')[:3])
