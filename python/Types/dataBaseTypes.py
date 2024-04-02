@@ -1,24 +1,27 @@
-from sqlite3 import Date
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
+from pydantic.v1.dataclasses import dataclass
 
 
+@dataclass
 class TemperatureTable(BaseModel):
     __tablename__ = "temperatures"
     id: int
-    time: Date
+    time: datetime
     temp_c: float
     temp_f: float
     HID: str
 
 
+@dataclass
 class TempReading(BaseModel):
     temp_c: float
     temp_f: float
     HID: str
 
-
+@dataclass
 class UsersTable(BaseModel):
     __tablename__ = "users"
     username: str

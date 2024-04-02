@@ -1,23 +1,24 @@
-import os
-import time
-from datetime import datetime
-
 import requests
-from Helpers.pi_requests_class import PiRequests
+import json
 
-# Adresse des DS18B20-Sensors im Dateisystem
-sensor_file = '/sys/bus/w1/devices/28-940feb086461/w1_slave'
+from datetime import datetime
+from Helpers.pi_requests_class import PiRequests
+from Helpers.functions import get_sensor, get_user, get_endpoint, get_json_file
+
+sensor_file = get_sensor()
 
 # Userdata
-user_name = input('Bitte gib deinen Benutzernamen ein: ')
-user_password = input('Bitte gib dein Passwort ein: ')
+
+user_name, user_password = get_user()
 
 # REST-API-Endpunkt
-api_endpoint = input('Bitte gib die IP-Adresse des Servers ein: ')
-pi_request = PiRequests(api_endpoint, user_name, user_password, 'admin')
-# Pfad zur TXT-Datei für die Temperatur
-txt_file_path = 'temperatur.txt'
+api_endpoint = get_endpoint()
 
+pi_request = PiRequests(api_endpoint, user_name, user_password, 'admin')
+
+# Dateipfad für die Temperaturdaten
+json_path = 'temperatures.json'
+temps = get_json_file(json_path, pi_request.get_auth())
 
 
 def read_temperature():
@@ -32,46 +33,64 @@ def read_temperature():
 
             # Formatieren auf zwei Dezimalstellen
             formatted_temperature = "{:.2f}".format(temperature_celsius)
-            print("Temperatur ist: "+formatted_temperature)
+            print("Temperatur ist: " + formatted_temperature)
             return formatted_temperature
 
     except Exception as e:
         print(f"Fehler beim Lesen der Temperatur: {e}")
         return None
 
-def send_to_api(temperature):
-    temp_c = temperature
-    temp_f = float(temperature) * 9.0 / 5.0 + 32.0
+
+def send_to_api(temp_reading):
+    temp_c = temp_reading
+    temp_f = (float(temp_reading) * 9.0 / 5.0 + 32.0)
     try:
-        # Daten an das REST-API senden
+        # Daten an die REST-API senden
         temp_params = {
-            'time': datetime.now().strftime("%Y-%m-%dT%HH:%M:%S"),
+            'time': datetime.now().timestamp(),
             'temp_c': temp_c,
             'temp_f': temp_f,
         }
         pi_request.make_request(temp_params, 'create_temp')
+        response = pi_request.get_response()
+        if 'message' in response:
+            if 'inserted' in response['message']:
+                temps.append(temp_params)
+                update_json_file(json_path)
+                print(f"Erfolgreich an API gesendet. Antwort: {response['message']}")
+                return
+            else:
+                print(f"Fehler beim Senden an API: {response['message']}")
+                return
 
     except requests.exceptions.RequestException as api_err:
         print(f"Fehler beim Senden an API: {api_err}")
 
-def update_txt_file(temperature):
-    try:
-        # Temperatur in die TXT-Datei schreiben
-        with open(txt_file_path, 'w') as txt_file:
-            txt_file.write(temperature)
-        print(f"Temperatur in {txt_file_path} aktualisiert.")
 
-    except Exception as txt_err:
-        print(f"Fehler beim Aktualisieren der TXT-Datei: {txt_err}")
+def update_json_file(path):
+    with open(path, 'a+') as file:
+        file.seek(0)
+        json_data = json.load(file)
+        auth = pi_request.get_auth()
+        for user in json_data['users']:
+            if auth in user:
+                user[auth]['temps'] = temps
+        file.truncate(0)
+        json.dump(json_data, file)
 
+
+last_call = datetime.now().timestamp()
 # Hauptprogrammschleife
 while True:
-    temperature = read_temperature()
-
-    if temperature is not None:
-        send_to_api(temperature)
-        update_txt_file(temperature)
-
+    current_time = datetime.now().timestamp()
     # Wartezeit zwischen den Messungen
-    # time.sleep(1)
-
+    if current_time - last_call < 1:
+        continue
+    try:
+        temperature = read_temperature()
+        if temperature is not None:
+            send_to_api(temperature)
+            last_call = current_time
+    except Exception as e:
+        print(f"Fehler beim Auslesen der Temperatur: {e}")
+        break

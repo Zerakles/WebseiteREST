@@ -1,9 +1,7 @@
-import time
-
 import RPi.GPIO as GPIO
 
 from Helpers.pi_requests_class import PiRequests
-
+from Helpers.functions import get_user, get_endpoint
 
 # GPIO-Pins
 enable_pin = 5
@@ -14,8 +12,7 @@ input2_pin = 25
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
-
-# GPIO-Pins als Ausg
+# GPIO-Pins als Ausgang festlegen
 GPIO.setup(enable_pin, GPIO.OUT)
 GPIO.setup(input1_pin, GPIO.OUT)
 GPIO.setup(input2_pin, GPIO.OUT)
@@ -24,11 +21,10 @@ GPIO.setup(input2_pin, GPIO.OUT)
 GPIO.output(enable_pin, GPIO.HIGH)
 
 # Userdata
-user_name = input('Bitte gib deinen Benutzernamen ein: ')
-user_password = input('Bitte gib dein Passwort ein: ')
+user_name, user_password = get_user()
 
 # REST-API-Endpunkt
-api_endpoint = input('Bitte gib die IP-Adresse des Servers ein: ')
+api_endpoint = get_endpoint()
 pi_request = PiRequests(api_endpoint, user_name, user_password, 'admin')
 
 
@@ -36,9 +32,11 @@ def motor_vorwaerts():
     GPIO.output(input1_pin, GPIO.HIGH)
     GPIO.output(input2_pin, GPIO.LOW)
 
+
 def motor_rueckwaerts():
     GPIO.output(input1_pin, GPIO.LOW)
     GPIO.output(input2_pin, GPIO.HIGH)
+
 
 def motor_stop():
     GPIO.output(input1_pin, GPIO.LOW)
@@ -46,7 +44,7 @@ def motor_stop():
 
 
 def get_temps():
-    pi_request.make_request({'limit': 5,'offset': None}, 'get_temps')
+    pi_request.make_request({'limit': 5, 'offset': None}, 'get_temps')
     response = pi_request.get_response()
     return response
 
@@ -68,18 +66,19 @@ def process_temps(temps):
         motor_stop()
     elif average_temp >= 28:
         motor_vorwaerts()
-    elif average_temp < 28:
+    elif average_temp < 25:
         motor_stop()
-    print(f"Durchschnittstemperatur: {average_temp}")
+    print(f"Durchschnittstemperatur: {average_temp:.2f}C")
+
 
 while True:
-    # Temperatur auslesen
-    temps = get_temps()
-    print(temps)
-    process_temps(temps)
-    # Wartezeit zwischen den Messungen
-    time.sleep(5)
-
+    try:
+        # Temperatur auslesen
+        current_temps = get_temps()
+        process_temps(current_temps)
+    except Exception as e:
+        print(f"Fehler beim Auslesen der Temperatur: {e}")
+        break
 
 # GPIO zurücksetzen
 GPIO.cleanup()

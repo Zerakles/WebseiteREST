@@ -1,56 +1,69 @@
-from RestAPI.Helpers.CRUD import RESTCRUD
+from python.RestAPI.Helpers.CRUD import RESTCRUD
+import os
+import numpy as np
 
 
 class Database(RESTCRUD):
-    crud = RESTCRUD()
-    request_queue = []
+    request_queue = np.array([])
+    response_queue = np.array([])
 
     def __init__(self):
-        self.crud.connect_to_db()
-        self.crud.cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
-        if self.crud.cursor.fetchone() is None:
+        super().__init__()
+        # test if Folder DB exists
+        if not os.path.exists('SQLite/DB'):
+            os.makedirs('SQLite/DB')
+        self.set_query("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
+        self.execute_query()
+        self.set_query()
+        if self.cursor.fetchone() is None:
             self.create_users_table()
             print("Created users table")
-        else:
-            print("users table exists")
-        self.crud.cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='temperatures'")
-        if self.crud.cursor.fetchone() is None:
+        self.set_query("SELECT name FROM sqlite_master WHERE type='table' AND name='temperatures'")
+        self.execute_query()
+        self.set_query()
+        if self.cursor.fetchone() is None:
             self.create_temperatures_table()
             print("Created temperatures table")
-        else:
-            print("temperatures table exists")
-        self.crud.close_connection()
-
+        self.close_connection()
 
     def create_users_table(self):
-        self.crud.cursor.execute(
-            """CREATE TABLE IF NOT EXISTS users (
+        self.set_query("""CREATE TABLE IF NOT EXISTS users (
         username TEXT NOT NULL,
         password TEXT NOT NULL,
         HID TEXT NOT NULL,
         token TEXT,
         unique(username, password, HID)
-        )"""
-        )
-        self.crud.conn.commit()
+        )""")
+        self.execute_query()
+        self.conn.commit()
 
     def add_to_queue(self, request):
-        self.request_queue.append(request)
+        if self.request_queue.size == 50:
+            self.request_queue = np.delete(self.request_queue, 0)
+        self.request_queue = np.append(self.request_queue, request)
 
     def get_request_queue(self):
-        if len(self.request_queue) == 0:
+        if self.request_queue.size == 0:
             return None
-        return self.request_queue.pop(0)
+        request = self.request_queue[0]
+        self.request_queue = np.delete(self.request_queue, 0)
+        return request
+
+    def get_response_queue(self):
+        if self.response_queue.size == 0:
+            return None
+        response = self.response_queue[0]
+        self.response_queue = np.delete(self.response_queue, 0)
+        return response
 
     def create_temperatures_table(self):
-        self.crud.cursor.execute(
-            """CREATE TABLE IF NOT EXISTS temperatures (
+        self.set_query("""CREATE TABLE IF NOT EXISTS temperatures (
         id INTEGER PRIMARY KEY,
         time TEXT NOT NULL,
         temp_c REAL,
         temp_f REAL,
         HID TEXT NOT NULL,
         unique(id, HID)
-        )"""
-        )
-        self.crud.conn.commit()
+        )""")
+        self.execute_query()
+        self.conn.commit()
