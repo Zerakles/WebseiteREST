@@ -107,6 +107,7 @@ async function intervalOne() {
     fanAnAus(avgTemp,1);
 }
 
+/*
 async function intervalTwo(){
     const temps = tempsData[2].temps;
     let avgTemp = 0
@@ -116,6 +117,7 @@ async function intervalTwo(){
     await fetchTemps(2);
     fanAnAus(avgTemp,2);
 }
+*/
 
 let setIntervalGetTemps = setInterval(intervalOne, 2000);
 //let setIntervalGetTemps2 = setInterval(intervalTwo, 2000);
