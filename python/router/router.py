@@ -15,6 +15,9 @@ hostname = socket.gethostname()
 if 'mmbbs' in hostname:
     hostname = 'mmbbs.local'
 ip_address = socket.gethostbyname(hostname)
+ip_splits = ip_address.split('.')
+if ip_splits[0] == '127':
+    ip_address = input('Bitte gib die letzte IP Adresse des Servers ein:')
 
 
 def make_request(request: APIRequest):

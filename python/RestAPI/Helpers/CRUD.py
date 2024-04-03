@@ -19,9 +19,9 @@ class RESTCRUD:
     last_user_update = 0
     last_user_lookup = None
     users = np.array([])
-    last_temperature_update = 0
-    last_temperature_lookup = None
-    temperatures = np.array([])
+    last_temperature_update: dict[str, float] = {}
+    last_temperature_lookup: dict[str, float] = {}
+    temperatures: dict[str, np.ndarray] = {}
 
     def __init__(self):
         self.connect_to_db()
@@ -49,13 +49,25 @@ class RESTCRUD:
         self.conn = sqlite3.connect('SQLite/DB/PiRest.db')
         self.cursor = self.conn.cursor()
 
+    def check_if_temp_cache_is_valid(self, HID: str):
+        if self.temperatures[HID] is None:
+            return False
+        if self.temperatures[HID].size == 0:
+            return False
+        if self.last_temperature_lookup[HID] is None:
+            return False
+        if self.last_temperature_update[HID] is None:
+            return False
+        if self.last_temperature_update[HID] > self.last_temperature_lookup[HID]:
+            return False
+        return True
+
     def get_temp(self, temp_id: int, HID: str):
-        if self.temperatures.size > 0 and self.last_temperature_lookup is not None:
-            if self.last_temperature_update < self.last_temperature_lookup:
-                for temp in self.temperatures:
-                    if compare_digest(str(temp['id']), str(temp_id)) and compare_digest(temp['HID'], HID):
-                        return {'temp_c': temp['temp_c'], 'temp_f': temp['temp_f']}
-                return {'message': 'Temperature not found'}
+        if self.check_if_temp_cache_is_valid(HID):
+            for temp in self.temperatures[HID]:
+                if compare_digest(str(temp['id']), str(temp_id)) and compare_digest(temp['HID'], HID):
+                    return {'temp_c': temp['temp_c'], 'temp_f': temp['temp_f']}
+            return {'message': 'Temperature not found'}
         self.query = f"SELECT * FROM temperatures WHERE id = {temp_id} AND HID = '{HID}'"
         self.execute_query()
         fetch = self.cursor.fetchone()
@@ -71,15 +83,14 @@ class RESTCRUD:
         return {'temp_c': data['temp_c'], 'temp_f': data['temp_f']}
 
     def get_temps(self, HID: str, offset: int = 0, limit: int = None):
-        if self.temperatures.size > 0 and self.last_temperature_lookup is not None:
-            sorted_temps = sorted(self.temperatures, key=lambda x: x['id'], reverse=True)
-            if self.last_temperature_update < self.last_temperature_lookup:
-                if limit:
-                    if offset is None:
-                        offset = 0
-                    return sorted_temps[::-1][offset:limit]
-                else:
-                    return sorted_temps
+        if self.check_if_temp_cache_is_valid(HID):
+            sorted_temps = sorted(self.temperatures[HID], key=lambda x: x['id'], reverse=True)
+            if limit:
+                if offset is None:
+                    offset = 0
+                return sorted_temps[::-1][offset:limit]
+            else:
+                return sorted_temps
         if offset is None:
             offset = 0
         self.query = f'SELECT * FROM temperatures WHERE HID = "{HID}" ORDER BY id DESC'
@@ -96,7 +107,7 @@ class RESTCRUD:
                 'temp_f': entry[3],
                 'HID': entry[4]
             })
-        self.temperatures = np.array(all_temps)
+        self.temperatures[HID] = np.array(all_temps)
         if limit:
             self.query += f' LIMIT {limit} OFFSET {offset}'
         self.execute_query()
@@ -112,7 +123,7 @@ class RESTCRUD:
                 'temp_f': entry[3],
                 'HID': entry[4]
             })
-        self.last_temperature_lookup = datetime.now().timestamp()
+        self.last_temperature_lookup[HID] = datetime.now().timestamp()
         return data
 
     def create_temp(self, data):
@@ -121,7 +132,7 @@ class RESTCRUD:
                       f"'{HID}')")
         self.execute_query()
         self.conn.commit()
-        self.last_temperature_update = datetime.now().timestamp()
+        self.last_temperature_update[HID] = datetime.now().timestamp()
         return {'message': f'New temperature inserted'}
 
     def update_temp(self, temp_id: int, HID: str,
@@ -134,7 +145,7 @@ class RESTCRUD:
             self.query = f"UPDATE temperatures SET temp_f = {temp_f} WHERE id = {temp_id} AND HID = '{HID}'"
             self.execute_query()
         self.conn.commit()
-        self.last_temperature_update = datetime.now().timestamp()
+        self.last_temperature_update[HID] = datetime.now().timestamp()
         return {'message': f'Temperature with id: {temp_id} updated'}
 
     def delete_temp(self, temp_id: int, HID: str):
