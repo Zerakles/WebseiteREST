@@ -1,183 +1,147 @@
-var temp = [20,25,30,40,60,10,90,20,30,40,50,10,90,20,40,50,10,90,20,120,20,40,50,10,90,20,120];
-var tempD = ["09:01","09:02","09:03","09:04","09:05","09:06","09:07","09:08","09:09","09:10","09:11","09:12","09:13","09:14","09:15","09:16","09:18","09:19","09:20","09:21","09:01","09:02","09:03","09:04","09:05","09:06","09:07"];
-var temp2 = [20,25,30,40,60,10,90,20,30,40,50,10,90,20,40,50,10,90,20,120,20,40,50,10,90,20,120];
-var tempD2 = ["09:01","09:02","09:03","09:04","09:05","09:06","09:07","09:08","09:09","09:10","09:11","09:12","09:13","09:14","09:15","09:16","09:18","09:19","09:20","09:21","09:01","09:02","09:03","09:04","09:05","09:06","09:07"];
 
-var db1;
-let response;
-async function fetchData(p) {
-    let response;
+const getClient = async (username, password, ip) => {
     try {
+        const response = await fetch(`http://${ip}:8000/api/v1/users/${username}?username=${username}&password=${password}`);
+        const user = await response.json()
+        return user.HID;
+}
+catch (error) {
+    console.error('Fetch error:', error);
+}
+}
 
-        if(p === 1){
-            response = await fetch("http://172.20.199.251:8000/api/v1/temps?HID=Client_TJlE8hDC7&limit=1");
+const validClients = {
+    1: null,
+    2: null
+}
+const tempsData = {
+    1: {
+        temps: [],
+        init: false,
+        fanRunning: false
+    },
+    2: {
+        temps: [],
+        init: false,
+        fanRunning: false
+    }
+}
+const fetchTemps = async (clientId) => {
+    if (clientId < 1 || clientId > 2) {
+        console.error('Invalid client ID');
+        return
+    }
+    try {
+        if (!validClients[clientId]) {
+            validClients[clientId] = await getClient(`PI${clientId}`, `PI${clientId}`, ip);
         }
 
-
+        const response = await fetch(`http://${ip}:8000/api/v1/temps/?HID=${validClients[clientId]}&limit=5`);
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            return;
         }
-
-
-
-        const data = await response.json();
         // Hier kannst du mit den geladenen Daten arbeiten
-        db1 = data;
-        db1 = JSON.parse(db1);
+        const temps = await response.json();
+        const knownTemps = tempsData[clientId]?.temps?.map(temp => temp.id);
+        for (const temp of temps) {
+            if(knownTemps?.includes(temp.id)) continue;
+            tempsData[clientId].temps.push(temp);
+            if(tempsData[clientId].temps.length !== 0) {
+            tempsData[clientId].temps = tempsData[clientId]?.temps?.sort((a, b) => a.id - b.id).reverse().slice(0, Math.min(tempsData[clientId].temps.length, 10)).reverse();
+        }
+            insertHTMLContent(clientId - 1);
+        }
     } catch (error) {
         console.error('Fetch error:', error);
     }
 }
 
-// Aufruf der Funktion
-fetchData(1);
-
-
-
-
-
-var container = document.getElementsByClassName("Container");
-var color = "rgb(0, 179, 255)";
-var Prozent;
-var intF = true;
-
-
-
-function temptoProzent(t){
-    Prozent = Math.round(t / 1.2);
-    return Prozent;
+const tempToPercent = (temp) => Math.round(temp / 1.2);
+function tempColor(t){
+    if(t >= 0 && t < 25 ) color = "rgb(0, 179, 255)";
+    else if(t >= 25 && t < 30) color = "rgb(255, 204, 0)";
+    else if(t >= 30 && t < 45) color = "orange";
+    else if(t >= 45 && t < 60) color = "rgb(255, 77, 0)";
+    else color = "rgb(255, 28, 28)";
+    return color;
 }
 
+let tempOneInit = false
+let container = document.getElementsByClassName("Container");
+let color = "rgb(0, 179, 255)";
 
-function q_einfügen(c){
-    var tPark;
-    x=0;
-    if(c == 0){
-        if(temp.length > 10 ){
-            container[0].innerHTML = `<span class="T15">15° -</span>
+const insertHTMLContent = (containerIndex) => {
+    const clientIndex = containerIndex + 1;
+    const validContainerIndex = [0,1]
+    if (!validContainerIndex.includes(containerIndex) || !tempsData[clientIndex] || tempsData[clientIndex].temps.length === 0) return
+    let x = 0;
+    if(!tempsData[clientIndex].init){
+            container[containerIndex].innerHTML = `<span class="T15">15° -</span>
          <span class="T30">30° -</span>
          <span class="T60">60° -</span>
          <span class="T90">90° -</span>
          <span class="T120">120° -</span>`;
-            for(y = temp.length - 10; y < temp.length; y++){
-                color = tempgrad(temp[y]);
-                tPark = temptoProzent(temp[y]);
-
-                container[0].innerHTML += `<div class="q" style="height:${tPark}%; background-color: ${color};"><span class="temp">${temp[y]}°</span> <span class="tempD">${tempD[y]}</span></div>`;
-                x++
-            }
-        }else{
-            for(i = 0; i < temp.length; i++){
-                color = tempgrad(temp[i]);
-                tPark = temptoProzent(temp[i])
-                container[0].innerHTML += `<div class="q" style="height:${tPark}%; background-color: ${color};"><span class="temp">${temp[i]}°</span> <span class="tempD">${tempD[y]}</span></div>`;
-                x++
-
-
-            }
+            tempOneInit = true;
         }
-
+    for (const temp of tempsData[clientIndex].temps) {
+        const tempDate = new Date(temp.time).toISOString().slice(0, 19).split('T');
+            const seperatedDate = tempDate[0].split('-');
+            tempDate[0] = seperatedDate[2] + "." + seperatedDate[1] + "." + seperatedDate[0];
+        color = tempColor(temp.temp_c);
+        const tempHeight = tempToPercent(temp.temp_c);
+        container[containerIndex].innerHTML += `<div class="q" style="height:${tempHeight}%; background-color: ${color};"><span class="temp">${temp.temp_c}°</span> <span class="tempD">${tempDate[0]} <br> ${tempDate[1]}</span></div>`;
+        x++
     }
 }
 
-function tempgrad(t){
-    if(t >= 0 && t < 25 ){
-        color = "rgb(0, 179, 255)";
-    }else if(t >= 25 && t < 30){
-        color = "rgb(255, 204, 0)";
-    }else if(t >= 30 && t < 45){
-        color = "orange";
-    }else if(t >= 45 && t < 60){
-        color = "rgb(255, 77, 0)";
-    }else{
-        color = "rgb(255, 28, 28)";
+// Aufruf der Funktion
+fetchTemps(1).then(() => insertHTMLContent(0));
+
+async function intervalOne() {
+    await fetchTemps(1)
+    const temps = tempsData[1].temps;
+    let avgTemp = 0
+    if(temps.length !== 0) {
+        avgTemp = temps.reduce((acc, temp) => acc + temp.temp_c, 0) / temps.length;
     }
-
-    return color;
+    fanAnAus(avgTemp,1);
 }
 
-
-
-q_einfügen(0)
-
-var park;
-var parkt;
-function addT(){
-
-    fetchData(1)
-    setTimeout(function () {
-        park = Math.round(db1[0].temp_c);
-        parkt = db1[0].time;
-
-        temp.push(park);
-        tempD.push(db1[0].time.substring(11))
-
-
-        q_einfügen(0)
-
-    },  3000);
+async function intervalTwo(){
+    const temps = tempsData[2].temps;
+    let avgTemp = 0
+    if(temps.length !== 0) {
+        avgTemp = temps.reduce((acc, temp) => acc + temp.temp_c, 0) / temps.length;
+    }
+    await fetchTemps(2);
+    fanAnAus(avgTemp,2);
 }
 
-function addT2(){
+let setIntervalGetTemps = setInterval(intervalOne, 2000);
+//let setIntervalGetTemps2 = setInterval(intervalTwo, 2000);
+const babell = document.getElementsByClassName("babell");
 
-    fetchData(2)
-    setTimeout(function () {
-        for(var x =0; x < db1.length; x++){
-            park2[x] = +db1[x].temp_c
-        }
-
-        fanAnAus(park2,1);
-
-    },  2000);
-}
-
-
-var setaddT = setInterval(addT, 3000);
-var setaddT = setInterval(addT2, 3000);
-
-
-function anundaus(){
-    if(intF === true){
-        clearInterval(setaddT);
-        intF = false;
-    }else{
-        setaddT = setInterval(addT, 5000);
-        intF = true;
+const toggleFan = () => {
+    if(tempsData[1].fanRunning){
+        clearInterval(setIntervalGetTemps);
+        tempsData[1].fanRunning = false;
+    } else {
+        setIntervalGetTemps = setInterval(intervalOne, 2000);
+        tempsData[1].fanRunning = true;
     }
 }
 
-
-
-
-var babell = document.getElementsByClassName("babell");
-
-function fanAnAus(t,f){
-    if(f == 1){
-        if(checkAvgTemp(t)){
-            babell[0].style.backgroundColor = "green"
-            babell[0].style.left = "3%";
-
-        }else{
-            babell[0].style.backgroundColor = "rgb(255, 28, 28)"
-            babell[0].style.left = "calc(97% - 20px)";
-        }
-
+function fanAnAus(avgTemp,fanId){
+    const babellId = fanId - 1;
+    if(!babell[babellId]) return;
+    if(avgTemp > 28){
+        babell[babellId].style.backgroundColor = "green"
+        babell[babellId].style.left = "3%";
+        return
     }
-
-}
-
-
-
-
-function checkAvgTemp(t){
-    var sum = 0;
-    for(var i =0 ; i < t.length; i++ ){
-        sum += t[i];
-    }
-    if (sum / 5 > 28){
-        return true;
-    }else{
-        return false;
+    if (avgTemp <= 25) {
+        babell[babellId].style.backgroundColor = "rgb(255, 28, 28)"
+        babell[babellId].style.left = "calc(97% - 20px)";
     }
 }
 

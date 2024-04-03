@@ -41,7 +41,6 @@ transition-duration: 500ms;
 }
 
 .q1{
-
     height: 70%;
     width: 30px;
     background-color: rgb(255, 67, 145);
@@ -68,9 +67,7 @@ transition-duration: 500ms;
     font-size: 14px;
     position: absolute;
     bottom: -30px;
-    left: calc(50% - 17px);
-
-
+    left: calc(25% - 17px);
 }
 
 .T15{
