@@ -116,7 +116,7 @@ def get_endpoint():
             return f'{ip_address}'
     ip_address = '.'.join(ip_address.split('.')[:3])
     if save_data and save_data['hostname'] != '0.0.0.0':
-        ip_check = '.'.join(str(save_data['hostname']).split('.')[:3])
+        ip_check = '.'.join(str(save_data['hostname']).split('.')[:2])
         if ip_check == ip_address:
             print(f"Soll {save_data['hostname']} verwendet werden? (j/n):")
             while True:
@@ -127,13 +127,16 @@ def get_endpoint():
                     break
                 else:
                     print('Bitte gib j oder n ein:')
-    octave = 0
-    while int(octave) > 255 or int(octave) <= 0:
-        octave = input('Bitte gib die letzte Oktette des Servers ein:')
+    octave_1 = 0
+    octave_2 = 0
+    while int(octave_1) > 255 or int(octave_1) <= 0:
+        octave_1 = input('Bitte gib die dritte Oktette des Servers ein:')
+    while int(octave_2) > 255 or int(octave_2) <= 0:
+        octave_2 = input('Bitte gib die Letzte Oktette des Servers ein:')
     with open('cache/save_data.json', 'w') as file:
         data = {
             'user': save_data['user'],
-            'hostname': f'{ip_address}.{octave}'
+            'hostname': f'{ip_address}.{octave_1}.{octave_2}'
         }
         json.dump(data, file)
-    return f'{ip_address}.{octave}'
+    return f'{ip_address}.{octave_1}.{octave_2}'
