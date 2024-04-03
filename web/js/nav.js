@@ -1,4 +1,4 @@
-const ip = '172.20.199.182';
+let server_ip = '172.20.194.143';
 
 
 
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     buttons.forEach(button => {
         button.addEventListener('click', function() {
             let id = this.id;
-            window.location.href = `http://${ip}:9000/?site=${id}`;
+            window.location.href = `http://${server_ip}/?site=${id}`;
         });
     });
 });
