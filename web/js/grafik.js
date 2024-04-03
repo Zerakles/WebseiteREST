@@ -5,10 +5,9 @@ const getClient = async (username, password, ip) => {
         const response = await fetch(`http://${ip}:8000/api/v1/users/${username}?username=${username}&password=${password}`);
         const user = await response.json()
         return user.HID;
-}
-catch (error) {
-    console.error('Fetch error:', error);
-}
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
 }
 
 const validClients = {
@@ -29,7 +28,7 @@ const tempsData = {
 }
 const fetchTemps = async (clientId) => {
     if (clientId < 1 || clientId > 2) {
-        console.error('Invalid client ID');
+        console.error('Ungültige Client-ID');
         return
     }
     try {
@@ -37,13 +36,13 @@ const fetchTemps = async (clientId) => {
             validClients[clientId] = await getClient(`PI${clientId}`, `PI${clientId}`, ip);
         }
 
-        const response = await fetch(`http://${ip}:8000/api/v1/temps/?HID=${validClients[clientId]}&limit=5`);
+        let response = await fetch(`http://${ip}:8000/api/v1/temps/?HID=${validClients[clientId]}&limit=5`);
         if (!response.ok) {
             return;
         }
         // Hier kannst du mit den geladenen Daten arbeiten
-        const temps = await response.json();
-        const knownTemps = tempsData[clientId]?.temps?.map(temp => temp.id);
+        let temps = await response.json();
+        let knownTemps = tempsData[clientId]?.temps?.map(temp => temp.id);
         for (const temp of temps) {
             if(knownTemps?.includes(temp.id)) continue;
             tempsData[clientId].temps.push(temp);
@@ -72,8 +71,8 @@ let container = document.getElementsByClassName("Container");
 let color = "rgb(0, 179, 255)";
 
 const insertHTMLContent = (containerIndex) => {
-    const clientIndex = containerIndex + 1;
-    const validContainerIndex = [0,1]
+    let clientIndex = containerIndex + 1;
+    let validContainerIndex = [0,1]
     if (!validContainerIndex.includes(containerIndex) || !tempsData[clientIndex] || tempsData[clientIndex].temps.length === 0) return
     let x = 0;
     if(!tempsData[clientIndex].init){
@@ -89,7 +88,7 @@ const insertHTMLContent = (containerIndex) => {
             const seperatedDate = tempDate[0].split('-');
             tempDate[0] = seperatedDate[2] + "." + seperatedDate[1] + "." + seperatedDate[0];
         color = tempColor(temp.temp_c);
-        const tempHeight = tempToPercent(temp.temp_c);
+        let tempHeight = tempToPercent(temp.temp_c);
         container[containerIndex].innerHTML += `<div class="q" style="height:${tempHeight}%; background-color: ${color};"><span class="temp">${temp.temp_c}°</span> <span class="tempD">${tempDate[0]} <br> ${tempDate[1]}</span></div>`;
         x++
     }
