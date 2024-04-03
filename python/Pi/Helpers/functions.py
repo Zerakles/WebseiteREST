@@ -34,7 +34,7 @@ def get_json_file(file_path, auth):
 def get_sensor():
     # Adresse des DS18B20-Sensors im Dateisystem
     # regEx for the sensor file
-    regex = r"28.*"
+    regex = "^28-\w+$"
     # get the sensor file
     sensor_file = None
     for root, dirs, files in os.walk('/sys/bus/w1/devices/'):
@@ -105,7 +105,8 @@ def get_endpoint():
     if 'mmbbs' in hostname:
         hostname = 'mmbbs.local'
     ip_address = socket.gethostbyname(hostname)
-    if ip_address == '127.0.0.1':
+    first_octet = ip_address.split('.')[0]
+    if first_octet == '127':
         ip_address = input('Bitte gib die Adresse des Servers ein:')
         with open('cache/save_data.json', 'w') as file:
             data = {
@@ -114,7 +115,7 @@ def get_endpoint():
             }
             json.dump(data, file)
             return f'{ip_address}'
-    ip_address = '.'.join(ip_address.split('.')[:3])
+    ip_address = '.'.join(ip_address.split('.')[:2])
     if save_data and save_data['hostname'] != '0.0.0.0':
         ip_check = '.'.join(str(save_data['hostname']).split('.')[:2])
         if ip_check == ip_address:
