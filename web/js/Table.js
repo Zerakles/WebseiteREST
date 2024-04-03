@@ -1,3 +1,4 @@
+
 const getClient = async (username, password, ip) => {
     try {
         const response = await fetch(`http://${ip}:8000/api/v1/users/${username}?username=${username}&password=${password}`);
