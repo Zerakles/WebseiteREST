@@ -49,6 +49,8 @@ def get_sensor():
 
 
 def get_user():
+    if not os.path.exists('cache/'):
+        os.makedirs('cache/')
     save_data = check_for_save_data()
     user = None
     user_data = {
