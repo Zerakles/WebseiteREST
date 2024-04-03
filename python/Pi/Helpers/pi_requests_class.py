@@ -7,8 +7,6 @@ class PiRequests:
     auth = None
     users_session = CachedSession(
         cache_name='cache/auth_cache', expire_after=28800)
-    temps_session = CachedSession(
-        cache_name='cache/temps_cache', expire_after=5)
 
     def __init__(self, host, username, password, token):
         self.host = host
