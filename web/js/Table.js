@@ -86,7 +86,7 @@ function updateTable(clientId) {
     tableBody.innerHTML = '';
     if (tempsData[clientId] && tempsData[clientId].temps.length > 0) {
         for (const tempData of tempsData[clientId].temps.sort((a, b) => a.id - b.id)) {
-            let date = new Date(temp.time);
+            let date = new Date(tempData.time);
             date.setTime(date.getTime()+(2 * 60 * 60 * 1000));
             const tempDate = date.toISOString().slice(0, 19).split('T');
             const seperatedDate = tempDate[0].split('-');
