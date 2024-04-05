@@ -52,8 +52,8 @@ const fetchTemps = async (clientId) => {
             return;
         }
         // Hier kannst du mit den geladenen Daten arbeiten
-        let temps = await response.json();
-        let knownTemps = tempsData[clientId]?.temps?.map(temp => temp.id);
+        const temps = await response.json();
+        const knownTemps = tempsData[clientId]?.temps?.map(temp => temp.id);
         for (const temp of temps) {
             if(knownTemps?.includes(temp.id)) continue;
             tempsData[clientId].temps.push(temp);
