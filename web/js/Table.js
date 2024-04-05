@@ -59,8 +59,9 @@ const fetchTemps = async (clientId) => {
     const temps = tempsData[clientId].temps;
     let avgTemp = 0
     if(temps.length !== 0) {
-        avgTemp = temps.reduce((acc, temp) => acc + temp.temp_c, 0) / temps.length;
+        avgTemp = temps.slice(0,Math.min(5, temps.length)).reduce((acc, temp) => acc + temp.temp_c, 0) / 5;
     }
+    console.log("Momentaner Durchschnitt ist: " +avgTemp);
     fanAnAus(avgTemp,clientId);
 }
 

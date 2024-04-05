@@ -151,8 +151,9 @@ async function intervalOne() {
     const temps = tempsData[1].temps;
     let avgTemp = 0
     if(temps.length !== 0) {
-        avgTemp = temps.reduce((acc, temp) => acc + temp.temp_c, 0) / temps.length;
+        avgTemp = temps.slice(0,Math.min(5, temps.length)).reduce((acc, temp) => acc + temp.temp_c, 0) / 5;
     }
+    console.log("Momentaner Durchschnitt ist: " +avgTemp);
     fanAnAus(avgTemp,1);
 }
 
@@ -160,7 +161,7 @@ async function intervalOne() {
     Hier wird ein Intervall erstellt.
     In diesem Fall werden alle 2 Sekunden die Methode intervalOne ausgeführt.
  */
-let setIntervalGetTemps = setInterval(intervalOne, 2000);
+let setIntervalGetTemps = setInterval(intervalOne, 5000);
 
 /*
     Hier wird der Fan aus dem HTML-Code in einer Konstanten festgehalten.
