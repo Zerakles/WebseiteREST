@@ -137,7 +137,7 @@ class RESTCRUD:
         self.last_temperature_lookup[HID] = datetime.now().timestamp()
         return data
 
-# Temperaturdaten erstellen und in die Datenbank einfügen
+    # Temperaturdaten erstellen und in die Datenbank einfügen
     def create_temp(self, data):
         time, temp_c, temp_f, HID = data.values()
         self.query = (f"INSERT INTO temperatures (time, temp_c, temp_f, HID) VALUES ('{time}', {temp_c}, {temp_f}, "
@@ -147,7 +147,7 @@ class RESTCRUD:
         self.last_temperature_update[HID] = datetime.now().timestamp()
         return {'message': f'New temperature inserted'}
 
-# Temperaturdaten aktualisieren
+    # Temperaturdaten aktualisieren
     def update_temp(self, temp_id: int, HID: str,
                     temp_c: float = Field(None), temp_f: float = Field(None)
                     ):
@@ -161,7 +161,7 @@ class RESTCRUD:
         self.last_temperature_update[HID] = datetime.now().timestamp()
         return {'message': f'Temperature with id: {temp_id} updated'}
 
-# Temperaturdaten löschen
+    # Temperaturdaten löschen
     def delete_temp(self, temp_id: int, HID: str):
         self.query = f"DELETE FROM temperatures WHERE id = {temp_id} AND HID = '{HID}'"
         self.error_message = f'Temperature {temp_id} not found'
@@ -171,7 +171,7 @@ class RESTCRUD:
 
         return {'message': f'Temperature {temp_id} deleted'}
 
-# Mehrere Temperaturdaten löschen
+    # Mehrere Temperaturdaten löschen
     def delete_temps(self, temp_ids: list[int], HID: str):
         for temp_id in temp_ids:
             self.query = f"DELETE FROM temperatures WHERE id = {temp_id} AND HID = '{HID}'"
@@ -181,7 +181,7 @@ class RESTCRUD:
 
         return {'message': f'Temperatures {temp_ids} deleted'}
 
-# Benutzerdaten abrufen
+    # Benutzerdaten abrufen
     def get_HID(self, username: str, password: str):
         if self.users.size > 0 and self.last_user_lookup is not None:
             if self.last_user_update < self.last_user_lookup:
@@ -196,13 +196,13 @@ class RESTCRUD:
             return {'message': 'User not found'}
         return data[0]
 
-# Hardware-ID generieren
+    # Hardware-ID generieren
     def generate_HID(self):
         characters = string.ascii_letters + string.digits
         HID = ''.join(random.choice(characters) for _ in range(9))
         return HID
 
-# Benutzerdaten eines bestimmten Benutzers abrufen
+    # Benutzerdaten eines bestimmten Benutzers abrufen
     def get_user(self, username: str, password: str):
         if self.users.size > 0 and self.last_user_lookup:
             if self.last_user_update < self.last_user_lookup:
@@ -223,7 +223,8 @@ class RESTCRUD:
             'token': fetch[3]
         }
         return data
-# Alle Benutzerdaten abrufen
+
+    # Alle Benutzerdaten abrufen
     def get_users(self, HID: str):
         if not self.check_for_permission(HID):
             return 'Permission denied'
@@ -250,7 +251,7 @@ class RESTCRUD:
                 err = sqlite3.Error
                 return {'message': err}
 
-# Benutzer erstellen
+    # Benutzer erstellen
     def create_user(self, data: dict):
         username, password, token = data.values()
         self.cursor.execute("SELECT HID FROM users")
@@ -269,7 +270,7 @@ class RESTCRUD:
             err = sqlite3.Error
             return {'message': f'{err} \nCould not create user'}
 
-# Überprüfen, ob ein Benutzer die Berechtigung hat
+    # Überprüfen, ob ein Benutzer die Berechtigung hat
     def check_for_permission(self, HID: str):
         self.query = f"SELECT token FROM users WHERE HID = '{HID}'"
         self.execute_query()
@@ -277,7 +278,7 @@ class RESTCRUD:
         fetch = self.cursor.fetchone()
         return fetch is not None and fetch[0] == 'admin'
 
-# Benutzerdaten Löschen
+    # Benutzerdaten Löschen
     def delete_user(self, user_to_delete: dict[str, str], user_deleting: dict[str, str]):
         username, password = user_to_delete.values()
         if self.check_for_permission(user_deleting['HID']):

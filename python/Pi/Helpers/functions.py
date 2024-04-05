@@ -4,6 +4,7 @@ import sys
 import socket
 import json
 
+
 # Liest Daten aus einer JSON-Datei
 def get_json_file(file_path, auth):
     temps = []
@@ -30,6 +31,7 @@ def get_json_file(file_path, auth):
             json.dump(json_data, file)
     return temps
 
+
 # Liest die Temperatur aus dem Sensor aus
 def get_sensor():
     # Adresse des DS18B20-Sensors im Dateisystem
@@ -46,6 +48,7 @@ def get_sensor():
         print("Keine Sensor-Datei gefunden.")
         sys.exit(1)
     return sensor_file
+
 
 # Überprüft, ob es Userdaten gibt und gibt sie zurück
 def get_user():
@@ -84,6 +87,7 @@ def get_user():
         }
         json.dump(data, file)
     return user_data[user]['username'], user_data[user]['password']
+
 
 # Prüft, ob die Datei save_data.json existiert und gibt den Inhalt zurück oder erstellt die Datei
 def check_for_save_data():

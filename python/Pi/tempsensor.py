@@ -66,6 +66,7 @@ def send_to_api(temp_reading):
     except requests.exceptions.RequestException as api_err:
         print(f"Fehler beim Senden an API: {api_err}")
 
+
 # Aktualisiert die JSON-Datei mit den neuen Temperaturdaten
 def update_json_file(path):
     with open(path, 'a+') as file:
@@ -77,6 +78,7 @@ def update_json_file(path):
                 user[auth]['temps'] = temps
         file.truncate(0)
         json.dump(json_data, file)
+
 
 # Zeitstempel für die letzte Messung
 last_call = datetime.now().timestamp()
