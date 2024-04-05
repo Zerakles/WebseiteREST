@@ -66,7 +66,7 @@ def send_to_api(temp_reading):
     except requests.exceptions.RequestException as api_err:
         print(f"Fehler beim Senden an API: {api_err}")
 
-
+# Aktualisiert die JSON-Datei mit den neuen Temperaturdaten
 def update_json_file(path):
     with open(path, 'a+') as file:
         file.seek(0)
@@ -78,7 +78,7 @@ def update_json_file(path):
         file.truncate(0)
         json.dump(json_data, file)
 
-
+# Zeitstempel für die letzte Messung
 last_call = datetime.now().timestamp()
 # Hauptprogrammschleife
 while True:
@@ -86,6 +86,8 @@ while True:
     # Wartezeit zwischen den Messungen
     if current_time - last_call < 1:
         continue
+    # Temperatur auslesen und an die API senden, wenn die Wartezeit abgelaufen ist,
+    # und die Temperatur erfolgreich gelesen wurde
     try:
         temperature = read_temperature()
         if temperature is not None:

@@ -20,12 +20,18 @@ if ip_splits[0] == '127':
     ip_address = input('Bitte gib die IP Adresse des Servers ein:')
 
 
+# Ausführen der Anfrage
 def make_request(request: APIRequest):
+    # Fügt die Anfrage zur Warteschlange hinzu
     db.add_to_queue(request)
+    # Wartet auf die Antwort
     while request.get_response() is None:
         pass
+    # Gibt die Antwort zurück
     response = request.get_response()
+    # Löscht die Anfrage aus der Warteschlange
     request.kill_request()
+    # Gibt die Antwort zurück
     return Response(content=json.dumps(response, ensure_ascii=False), media_type="application/json")
 
 

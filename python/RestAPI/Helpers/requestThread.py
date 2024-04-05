@@ -6,6 +6,8 @@ from python.SQLite.database import Database
 from python.Types.requestTypes import GetTemperature, GetTemperatures, CreateTemperature, GetUser, UpdateTemperature, \
     DeleteTemperature, DeleteTemperatures, GetHID, CreateUser, GetUsers, DeleteUser
 
+
+# Aufbau der Klasse APIRequest
 class APIRequest:
     def __init__(self, url, params, type):
         self.url = url
@@ -34,6 +36,7 @@ class APIRequest:
         return
 
 
+# Aufbau der Klasse RequestThread (erbt von threading.Thread)
 class RequestThread(threading.Thread):
     current_request: Union[APIRequest, None] = None
     db: Database = None
@@ -42,12 +45,14 @@ class RequestThread(threading.Thread):
         super().__init__()
         self.db = db
 
+    # Setzt die aktuelle Anfrage
     def set_current_request(self, request: Union[APIRequest, None] = None,):
         if request is None:
             self.current_request = None
         else:
             self.current_request = request
 
+    # Verarbeitet die aktuelle Anfrage
     def process_request(self):
         if self.current_request is None:
             self.set_current_request()
@@ -106,6 +111,7 @@ class RequestThread(threading.Thread):
         self.db.close_connection()
         self.set_current_request()
 
+    # Führt den Thread aus
     def run(self):
         while True:
             if self.current_request is None:

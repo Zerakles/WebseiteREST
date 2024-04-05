@@ -37,18 +37,18 @@ def motor_rueckwaerts():
     GPIO.output(input1_pin, GPIO.LOW)
     GPIO.output(input2_pin, GPIO.HIGH)
 
-
+# Motor stoppen
 def motor_stop():
     GPIO.output(input1_pin, GPIO.LOW)
     GPIO.output(input2_pin, GPIO.LOW)
 
-
+# Temperatur auslesen
 def get_temps():
     pi_request.make_request({'limit': 5, 'offset': None}, 'get_temps')
     response = pi_request.get_response()
     return response
 
-
+# Temperatur verarbeiten
 def process_temps(temps):
     average_temp = None
     if temps is None:
@@ -70,7 +70,7 @@ def process_temps(temps):
         motor_stop()
     print(f"Durchschnittstemperatur: {average_temp:.2f}C")
 
-
+# Temperatur auslesen und Motor steuern
 while True:
     try:
         # Temperatur auslesen

@@ -8,6 +8,7 @@ from router.router import db, ip_address, app
 same_origin_ip = '.'.join(ip_address.split('.')[:3])
 same_origin_ip_host = '.'.join(ip_address.split('.')[:2])
 
+# Erlaubte Origin-Adressen für CORS
 origins = [
     "http://localhost",
     "http://localhost:8080",

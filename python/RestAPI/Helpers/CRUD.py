@@ -29,6 +29,7 @@ class RESTCRUD:
     def set_query(self, query: str = None):
         self.query = query
 
+    # Query ausführen
     def execute_query(self):
         try:
             self.cursor.execute(self.query)
@@ -36,6 +37,7 @@ class RESTCRUD:
             err = sqlite3.Error
             return {'message': f'{err} \n{self.error_message}'}
 
+    # Verbindung zur Datenbank schließen
     def close_connection(self):
         self.cursor.close()
         self.conn.close()
@@ -45,10 +47,12 @@ class RESTCRUD:
         self.query = None
         self.error_message = 'Could not execute query'
 
+    # Verbindung zur Datenbank herstellen
     def connect_to_db(self):
         self.conn = sqlite3.connect('SQLite/DB/PiRest.db')
         self.cursor = self.conn.cursor()
 
+    # Überprüfen, ob die Temperaturdaten im Cache gültig sind
     def check_if_temp_cache_is_valid(self, HID: str):
         if HID not in self.temperatures:
             return False
@@ -62,6 +66,7 @@ class RESTCRUD:
             return False
         return True
 
+    # Temperaturdaten einer bestimmten Temperatur abrufen
     def get_temp(self, temp_id: int, HID: str):
         if self.check_if_temp_cache_is_valid(HID):
             for temp in self.temperatures[HID]:
@@ -82,8 +87,11 @@ class RESTCRUD:
         }
         return {'temp_c': data['temp_c'], 'temp_f': data['temp_f']}
 
+    # Alle Temperaturdaten von einem bestimmten Benutzer abrufen
     def get_temps(self, HID: str, offset: int = 0, limit: int = None):
+        # Überprüfen, ob die Temperaturdaten im Cache gültig sind
         if self.check_if_temp_cache_is_valid(HID):
+            # Temperaturdaten aus dem Cache abrufen und nach ID sortieren
             sorted_temps = sorted(self.temperatures[HID], key=lambda x: x['id'], reverse=True)
             if limit:
                 if offset is None:
@@ -93,12 +101,14 @@ class RESTCRUD:
                 return sorted_temps
         if offset is None:
             offset = 0
+        # Query erstellen
         self.query = f'SELECT * FROM temperatures WHERE HID = "{HID}" ORDER BY id DESC'
         self.execute_query()
         fetch = self.cursor.fetchall()
         all_temps = []
         if fetch is None:
             return {'message': 'No temperatures found'}
+        # Daten in ein Array speichern
         for entry in fetch:
             all_temps.append({
                 'id': entry[0],
@@ -107,6 +117,7 @@ class RESTCRUD:
                 'temp_f': entry[3],
                 'HID': entry[4]
             })
+        # Daten im Cache speichern
         self.temperatures[HID] = np.array(all_temps)
         if limit:
             self.query += f' LIMIT {limit} OFFSET {offset}'
@@ -126,6 +137,7 @@ class RESTCRUD:
         self.last_temperature_lookup[HID] = datetime.now().timestamp()
         return data
 
+# Temperaturdaten erstellen und in die Datenbank einfügen
     def create_temp(self, data):
         time, temp_c, temp_f, HID = data.values()
         self.query = (f"INSERT INTO temperatures (time, temp_c, temp_f, HID) VALUES ('{time}', {temp_c}, {temp_f}, "
@@ -135,6 +147,7 @@ class RESTCRUD:
         self.last_temperature_update[HID] = datetime.now().timestamp()
         return {'message': f'New temperature inserted'}
 
+# Temperaturdaten aktualisieren
     def update_temp(self, temp_id: int, HID: str,
                     temp_c: float = Field(None), temp_f: float = Field(None)
                     ):
@@ -148,6 +161,7 @@ class RESTCRUD:
         self.last_temperature_update[HID] = datetime.now().timestamp()
         return {'message': f'Temperature with id: {temp_id} updated'}
 
+# Temperaturdaten löschen
     def delete_temp(self, temp_id: int, HID: str):
         self.query = f"DELETE FROM temperatures WHERE id = {temp_id} AND HID = '{HID}'"
         self.error_message = f'Temperature {temp_id} not found'
@@ -157,6 +171,7 @@ class RESTCRUD:
 
         return {'message': f'Temperature {temp_id} deleted'}
 
+# Mehrere Temperaturdaten löschen
     def delete_temps(self, temp_ids: list[int], HID: str):
         for temp_id in temp_ids:
             self.query = f"DELETE FROM temperatures WHERE id = {temp_id} AND HID = '{HID}'"
@@ -166,6 +181,7 @@ class RESTCRUD:
 
         return {'message': f'Temperatures {temp_ids} deleted'}
 
+# Benutzerdaten abrufen
     def get_HID(self, username: str, password: str):
         if self.users.size > 0 and self.last_user_lookup is not None:
             if self.last_user_update < self.last_user_lookup:
@@ -180,11 +196,13 @@ class RESTCRUD:
             return {'message': 'User not found'}
         return data[0]
 
+# Hardware-ID generieren
     def generate_HID(self):
         characters = string.ascii_letters + string.digits
         HID = ''.join(random.choice(characters) for _ in range(9))
         return HID
 
+# Benutzerdaten eines bestimmten Benutzers abrufen
     def get_user(self, username: str, password: str):
         if self.users.size > 0 and self.last_user_lookup:
             if self.last_user_update < self.last_user_lookup:
@@ -205,7 +223,7 @@ class RESTCRUD:
             'token': fetch[3]
         }
         return data
-
+# Alle Benutzerdaten abrufen
     def get_users(self, HID: str):
         if not self.check_for_permission(HID):
             return 'Permission denied'
@@ -232,6 +250,7 @@ class RESTCRUD:
                 err = sqlite3.Error
                 return {'message': err}
 
+# Benutzer erstellen
     def create_user(self, data: dict):
         username, password, token = data.values()
         self.cursor.execute("SELECT HID FROM users")
@@ -250,6 +269,7 @@ class RESTCRUD:
             err = sqlite3.Error
             return {'message': f'{err} \nCould not create user'}
 
+# Überprüfen, ob ein Benutzer die Berechtigung hat
     def check_for_permission(self, HID: str):
         self.query = f"SELECT token FROM users WHERE HID = '{HID}'"
         self.execute_query()
@@ -257,6 +277,7 @@ class RESTCRUD:
         fetch = self.cursor.fetchone()
         return fetch is not None and fetch[0] == 'admin'
 
+# Benutzerdaten Löschen
     def delete_user(self, user_to_delete: dict[str, str], user_deleting: dict[str, str]):
         username, password = user_to_delete.values()
         if self.check_for_permission(user_deleting['HID']):

@@ -36,7 +36,9 @@ class PiRequests:
     def set_auth(self, auth):
         self.auth = auth
 
+# Sendet Anfragen an den Server
     def make_request(self, request_parameter, request_type):
+        # Konfiguration der Anfragen an die API
         config = {
             'get_temp': {
                 'url': f'http://{self.host}:8000/api/v1/temps/{request_parameter["temp_id"]}' if request_type ==
@@ -137,6 +139,7 @@ class PiRequests:
                 'method': 'delete'
             }
         }
+        # Sendet Anfrage an die API, wenn Anfrage in der Konfiguration existiert
         if request_type in config:
             r = requests.request(config[request_type]['method'], config[request_type]['url'],
                                  params=config[request_type]['params'])
