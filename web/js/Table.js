@@ -11,7 +11,7 @@ const getClient = async (username, password, ip) => {
 
 /*
     Objekt zur Speicherung gültiger Clients
-    Kann beliebig erweitert werden
+    kann beliebig erweitert werden
  */
 const validClients = {
     1: null,
@@ -86,7 +86,9 @@ function updateTable(clientId) {
     tableBody.innerHTML = '';
     if (tempsData[clientId] && tempsData[clientId].temps.length > 0) {
         for (const tempData of tempsData[clientId].temps.sort((a, b) => a.id - b.id)) {
-            const tempDate = new Date(tempData.time).toISOString().slice(0, 19).split('T');
+            let date = new Date(temp.time);
+            date.setTime(date.getTime()+(2 * 60 * 60 * 1000));
+            const tempDate = date.toISOString().slice(0, 19).split('T');
             const seperatedDate = tempDate[0].split('-');
             tempDate[0] = seperatedDate[2] + "." + seperatedDate[1] + "." + seperatedDate[0];
             tableBody.innerHTML += `
