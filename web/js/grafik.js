@@ -123,9 +123,11 @@ const insertHTMLContent = (containerIndex) => {
             isTempOneInit = true;
         }
     for (const temp of tempsData[clientIndex].temps) {
-        const tempDate = new Date(temp.time).toISOString().slice(0, 19).split('T');
-            const seperatedDate = tempDate[0].split('-');
-            tempDate[0] = seperatedDate[2] + "." + seperatedDate[1] + "." + seperatedDate[0];
+        let date = new Date(temp.time);
+        date.setTime(date.getTime()+(2 * 60 * 60 * 1000));
+        const tempDate = date.toISOString().slice(0, 19).split('T');
+        const seperatedDate = tempDate[0].split('-');
+        tempDate[0] = seperatedDate[2] + "." + seperatedDate[1] + "." + seperatedDate[0];
         color = tempColor(temp.temp_c);
         let tempHeight = tempToPercent(temp.temp_c);
         container[containerIndex].innerHTML += `<div class="q" style="height:${tempHeight}%; background-color: ${color};"><span class="temp">${temp.temp_c}°</span> <span class="tempD">${tempDate[0]} <br> ${tempDate[1]}</span></div>`;
