@@ -50,13 +50,13 @@ class RESTCRUD:
         self.cursor = self.conn.cursor()
 
     def check_if_temp_cache_is_valid(self, HID: str):
-        if self.temperatures[HID] is None:
+        if HID not in self.temperatures:
             return False
         if self.temperatures[HID].size == 0:
             return False
-        if self.last_temperature_lookup[HID] is None:
+        if HID not in self.last_temperature_lookup:
             return False
-        if self.last_temperature_update[HID] is None:
+        if HID not in self.last_temperature_update:
             return False
         if self.last_temperature_update[HID] > self.last_temperature_lookup[HID]:
             return False

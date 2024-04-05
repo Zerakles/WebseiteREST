@@ -11,6 +11,7 @@ same_origin_ip_host = '.'.join(ip_address.split('.')[:2])
 origins = [
     "http://localhost",
     "http://localhost:8080",
+    '*'
 ]
 
 origins.extend([f'http://{same_origin_ip}.{i}:8000' for i in np.arange(2, 255)])
