@@ -168,7 +168,7 @@ let setIntervalGetTemps = setInterval(intervalOne, 5000);
 /*
     Hier wird der Fan aus dem HTML-Code in einer Konstanten festgehalten.
  */
-const bubble = document.getElementsByClassName("babell");
+const bubble = document.getElementsByClassName("bubble");
 
 /*
     fanAnAus()
