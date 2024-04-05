@@ -112,14 +112,14 @@ function updateTable(clientId) {
  */
 
 function fanAnAus(temp, clientId) {
-    const babell = document.getElementsByClassName("babell")[clientId - 1];
+    const bubble = document.getElementsByClassName("bubble")[clientId - 1];
     if (temp > 28) {
-        babell.style.backgroundColor = "green";
-        babell.style.left = "3%";
+        bubble.style.backgroundColor = "green";
+        bubble.style.left = "3%";
         return
     }
     if (temp <= 25) {
-        babell.style.backgroundColor = "rgb(255, 28, 28)";
-        babell.style.left = "calc(97% - 20px)";
+        bubble.style.backgroundColor = "rgb(255, 28, 28)";
+        bubble.style.left = "calc(97% - 20px)";
     }
 }

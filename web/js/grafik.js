@@ -168,7 +168,7 @@ let setIntervalGetTemps = setInterval(intervalOne, 5000);
 /*
     Hier wird der Fan aus dem HTML-Code in einer Konstanten festgehalten.
  */
-const babell = document.getElementsByClassName("babell");
+const bubble = document.getElementsByClassName("babell");
 
 /*
     fanAnAus()
@@ -176,16 +176,16 @@ const babell = document.getElementsByClassName("babell");
     Ist dies der Fall wird der Fan als angeschaltet dargestellt, ansonsten wird er als ausgeschaltet dargestellt.
  */
 function fanAnAus(avgTemp,fanId){
-    const babellId = fanId - 1;
-    if(!babell[babellId]) return;
+    const bubbleId = fanId - 1;
+    if(!bubble[bubbleId]) return;
     if(avgTemp > 28){
-        babell[babellId].style.backgroundColor = "green"
-        babell[babellId].style.left = "3%";
+        bubble[bubbleId].style.backgroundColor = "green"
+        bubble[bubbleId].style.left = "3%";
         return
     }
     if (avgTemp <= 25) {
-        babell[babellId].style.backgroundColor = "rgb(255, 28, 28)"
-        babell[babellId].style.left = "calc(97% - 20px)";
+        bubble[bubbleId].style.backgroundColor = "rgb(255, 28, 28)"
+        bubble[bubbleId].style.left = "calc(97% - 20px)";
     }
 }
 

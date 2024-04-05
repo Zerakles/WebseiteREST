@@ -120,7 +120,7 @@
     width: 52px;
 }
 
-.seidbar{
+.sidebar{
     height: 100px;
     width: 100px;
     position: absolute;
@@ -144,7 +144,7 @@
     filter: brightness(2);
 }
 
-.seidbar2{
+.sidebar2{
     height: 100px;
     width: 100px;
     position: absolute;
