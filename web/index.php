@@ -1,11 +1,15 @@
 <?php
+    // Startet eine Session
     session_start();
 
+    // Setzt alle bekannten Seiten in einen Array
     $validSites = ["home", "t", "g"];
+
+    // Setzt die Seite fall nicht festgelegt oder unbekannt auf Home
     if (empty($_SESSION['site']) || !in_array($_SESSION['site'], $validSites)) {
         $_SESSION['site'] = "home";
     }
-
+    // Setzt die Seite auf die sich im Get-Parameter befindende Seite
     if (!empty($_GET["site"]) && in_array($_GET["site"], $validSites)) {
         $_SESSION['site'] = $_GET["site"];
     }
@@ -26,6 +30,9 @@
     <nav>
         <ul>
             <?php
+            /*
+                Rendert die Navigation um eine Aktiv Style setzten zu können.
+             */
             if ($_SESSION['site'] == "t") {
                 echo '<li><button id="t" class="nav active">Tabelle</button></li>
                               <li><button id="g" class="nav">Graph</button></li>';
@@ -44,6 +51,9 @@
 <body>
 <main>
     <?php
+    /*
+     * Rendert die gewünschte Seite in den Main-Tag
+     */
     if ($_SESSION['site'] == "home") {
         echo file_get_contents("./pages/graph.html");
     } elseif ($_SESSION['site'] == "t") {

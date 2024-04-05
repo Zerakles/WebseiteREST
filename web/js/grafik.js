@@ -1,5 +1,4 @@
-
-
+// Funktion zum Authentifizieren des Benutzers und Abrufen seiner HID
 const getClient = async (username, password, ip) => {
     try {
         const response = await fetch(`http://${ip}:8000/api/v1/users/${username}?username=${username}&password=${password}`);
@@ -10,10 +9,16 @@ const getClient = async (username, password, ip) => {
     }
 }
 
+/*
+    Objekt zur Speicherung gültiger Clients
+    Kann beliebig erweitert werden
+ */
 const validClients = {
     1: null,
     2: null
 }
+
+// Objekt zur Speicherung von Temperaturdaten und Zuständen für jeden Client
 const tempsData = {
     1: {
         temps: [],
@@ -26,6 +31,12 @@ const tempsData = {
         fanRunning: false
     }
 }
+/*
+    fetchTemps()
+    Funktion zum Abrufen von Temperaturdaten für einen bestimmten Client
+    lädt die Temperaturen für den angegebenen Client, wenn die Client-ID ungültig ist
+    oder ein Fehler beim Abrufen der Daten auftritt, wird eine Fehlermeldung ausgegeben.
+ */
 const fetchTemps = async (clientId) => {
     if (clientId < 1 || clientId > 2) {
         console.error('Ungültige Client-ID');
@@ -56,7 +67,19 @@ const fetchTemps = async (clientId) => {
     }
 }
 
+/*
+    tempToPercent()
+    Dieser sich in der Konstante befindende Term bzw. Rechenweg
+    rechnet die Temperatur in % um. Dies wird benötigt um eine
+    Farbe in tempColor() zu wählen.
+ */
 const tempToPercent = (temp) => Math.round(temp / 1.2);
+
+/*
+    tempColor()
+    Diese Methode gibt die passende Farbe für die Temperatur zurück.
+    Dies soll für eine bessere Übersicht im Graph sorgen.
+ */
 function tempColor(t){
     if(t >= 0 && t < 25 ) color = "rgb(0, 179, 255)";
     else if(t >= 25 && t < 30) color = "rgb(255, 204, 0)";
@@ -66,10 +89,26 @@ function tempColor(t){
     return color;
 }
 
-let tempOneInit = false
+/*
+    Dieser Boolean gibt an, ob die erste Temperatur bereits initialisiert wurde.
+ */
+let isTempOneInit = false
+/*
+    Hier wird der Container in eine Variable gesteckt,
+    in welchen wir unseren Graphen setzen wollen. Dieser wird anhand
+    der Klasse Container erkannt.
+ */
 let container = document.getElementsByClassName("Container");
+/*
+    Dies ist die Standardfarbe für die Temperatur.
+ */
 let color = "rgb(0, 179, 255)";
 
+/*
+    insertHTMLContent()
+    FÜgt den Graphen und die bisher enthaltenden Temperaturinhalte in
+    den Container ein. Später werden hiermit nur noch Temperaturen hinzugefügt.
+ */
 const insertHTMLContent = (containerIndex) => {
     let clientIndex = containerIndex + 1;
     let validContainerIndex = [0,1]
@@ -81,7 +120,7 @@ const insertHTMLContent = (containerIndex) => {
          <span class="T60">60° -</span>
          <span class="T90">90° -</span>
          <span class="T120">120° -</span>`;
-            tempOneInit = true;
+            isTempOneInit = true;
         }
     for (const temp of tempsData[clientIndex].temps) {
         const tempDate = new Date(temp.time).toISOString().slice(0, 19).split('T');
@@ -94,9 +133,19 @@ const insertHTMLContent = (containerIndex) => {
     }
 }
 
-// Aufruf der Funktion
+/*
+    fetchTemps()
+    Ruft einmal Temperaturdaten ab und fügt sie dann in Container ein. (Aufruf von inserHTMLContent)
+ */
 fetchTemps(1).then(() => insertHTMLContent(0));
 
+/*
+    intervalOne()
+    Diese Methode soll einem Intervall hinzugefügt werden um die Daten aktuell zu halten.
+    Nach Ablauf des gewünschten Intervalls wird erneut die Temperatur bei der REST-API abgefragt.
+    Daraufhin wird durch fetchTemps und insertHTMLContent die Temperatur ggf. in den Graphen eingefügt.
+    Zusätzlich wird die Durchschnittstemperatur berechnet und an die Methode fanAnAus übergeben.
+ */
 async function intervalOne() {
     await fetchTemps(1)
     const temps = tempsData[1].temps;
@@ -108,31 +157,21 @@ async function intervalOne() {
 }
 
 /*
-async function intervalTwo(){
-    const temps = tempsData[2].temps;
-    let avgTemp = 0
-    if(temps.length !== 0) {
-        avgTemp = temps.reduce((acc, temp) => acc + temp.temp_c, 0) / temps.length;
-    }
-    await fetchTemps(2);
-    fanAnAus(avgTemp,2);
-}
-*/
-
+    Hier wird ein Intervall erstellt.
+    In diesem Fall werden alle 2 Sekunden die Methode intervalOne ausgeführt.
+ */
 let setIntervalGetTemps = setInterval(intervalOne, 2000);
-//let setIntervalGetTemps2 = setInterval(intervalTwo, 2000);
+
+/*
+    Hier wird der Fan aus dem HTML-Code in einer Konstanten festgehalten.
+ */
 const babell = document.getElementsByClassName("babell");
 
-const toggleFan = () => {
-    if(tempsData[1].fanRunning){
-        clearInterval(setIntervalGetTemps);
-        tempsData[1].fanRunning = false;
-    } else {
-        setIntervalGetTemps = setInterval(intervalOne, 2000);
-        tempsData[1].fanRunning = true;
-    }
-}
-
+/*
+    fanAnAus()
+    Diese Methode erkennt wenn die Durchschnittstemperatur über 25°C liegt.
+    Ist dies der Fall wird der Fan als angeschaltet dargestellt, ansonsten wird er als ausgeschaltet dargestellt.
+ */
 function fanAnAus(avgTemp,fanId){
     const babellId = fanId - 1;
     if(!babell[babellId]) return;
